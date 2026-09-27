@@ -1,13 +1,15 @@
 import subprocess
 import sys
+from datetime import datetime
 from pathlib import Path
 
-from flask import Flask, redirect, url_for
+from flask import Flask, redirect, url_for, send_from_directory
 
 app = Flask(__name__)
 ROOT = Path(__file__).resolve().parent
+FOTOS = ROOT / "datos" / "fotos"
 LOG = ROOT / "datos" / "logs" / "sensor.csv"
-cam = None
+BANDERA = ROOT / "datos" / "grabar.txt"
 sen = None
 
 
@@ -15,23 +17,51 @@ def vivo(p):
     return p is not None and p.poll() is None
 
 
-def ultima_lectura():
+def grabacion_on():
+    if not BANDERA.exists():
+        return False
+    return BANDERA.read_text().strip().lower() == "on"
+
+
+def parse_clima():
     if not LOG.exists():
-        return "sin datos todavía"
+        return None
     lineas = LOG.read_text().strip().splitlines()
-    return lineas[-1] if lineas else "sin datos todavía"
+    if not lineas:
+        return None
+    partes = [p.strip() for p in lineas[-1].split(",")]
+    if len(partes) < 3:
+        return None
+    return {"temp": partes[1], "hum": partes[2]}
 
 
 @app.get("/")
 def index():
-    est_cam = "prendida" if vivo(cam) else "apagada"
     est_sen = "prendido" if vivo(sen) else "apagado"
-    clima = ultima_lectura()
+    est_vid = "ON" if grabacion_on() else "OFF"
+    ahora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    clima = parse_clima()
+    if clima:
+        bloque_clima = (
+            f"<p>Temperatura: <strong>{clima['temp']} °C</strong></p>"
+            f"<p>Humedad: <strong>{clima['hum']} %</strong></p>"
+        )
+    else:
+        bloque_clima = "<p>Temperatura: —</p><p>Humedad: —</p>"
+    preview = FOTOS / "preview.jpg"
+    if preview.exists():
+        bloque_foto = (
+            f'<img src="/foto/preview.jpg?v={int(preview.stat().st_mtime)}" '
+            f'alt="vivo" '
+            f'style="width:100%;max-width:28rem;height:auto;display:block;">'
+        )
+    else:
+        bloque_foto = "<p>Sin imagen</p>"
     return f"""<!doctype html>
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="refresh" content="10">
+  <meta http-equiv="refresh" content="2">
   <title>Indoor</title>
   <style>
     body {{ font-family: sans-serif; max-width: 32rem; margin: 3rem auto; }}
@@ -43,13 +73,19 @@ def index():
 <body>
   <h1>Indoor</h1>
   <section>
-    <p>Cámara: <strong>{est_cam}</strong></p>
-    <form method="post" action="/cam/on"><button type="submit">Iniciar cámara</button></form>
-    <form method="post" action="/cam/off"><button type="submit">Detener cámara</button></form>
+    {bloque_foto}
+  </section>
+  <section>
+    <p>Fecha y hora: <strong>{ahora}</strong></p>
+    {bloque_clima}
+  </section>
+  <section>
+    <p>Grabación: <strong>{est_vid}</strong></p>
+    <form method="post" action="/vid/on"><button type="submit">Grabar ON</button></form>
+    <form method="post" action="/vid/off"><button type="submit">Grabar OFF</button></form>
   </section>
   <section>
     <p>Sensor: <strong>{est_sen}</strong></p>
-    <p>Última lectura: <strong>{clima}</strong></p>
     <form method="post" action="/sen/on"><button type="submit">Iniciar sensor</button></form>
     <form method="post" action="/sen/off"><button type="submit">Detener sensor</button></form>
   </section>
@@ -58,23 +94,20 @@ def index():
 """
 
 
-@app.post("/cam/on")
-def cam_on():
-    global cam
-    if not vivo(cam):
-        cam = subprocess.Popen([sys.executable, str(ROOT / "foto_loop.py")], cwd=ROOT)
+@app.get("/foto/<nombre>")
+def servir_foto(nombre):
+    return send_from_directory(FOTOS, nombre)
+
+
+@app.post("/vid/on")
+def vid_on():
+    BANDERA.write_text("on\n")
     return redirect(url_for("index"))
 
 
-@app.post("/cam/off")
-def cam_off():
-    global cam
-    if vivo(cam):
-        cam.terminate()
-        try:
-            cam.wait(timeout=8)
-        except subprocess.TimeoutExpired:
-            cam.kill()
+@app.post("/vid/off")
+def vid_off():
+    BANDERA.write_text("off\n")
     return redirect(url_for("index"))
 
 
@@ -82,7 +115,10 @@ def cam_off():
 def sen_on():
     global sen
     if not vivo(sen):
-        sen = subprocess.Popen([sys.executable, str(ROOT / "log_sensor.py")], cwd=ROOT)
+        sen = subprocess.Popen(
+            [sys.executable, str(ROOT / "log_sensor.py")],
+            cwd=ROOT,
+        )
     return redirect(url_for("index"))
 
 

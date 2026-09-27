@@ -6,3 +6,7 @@ datos/fotos/*
 !datos/fotos/.gitkeep
 datos/logs/*
 !datos/logs/.gitkeep
+datos/video/*
+!datos/video/.gitkeep
+datos/fotos/preview.jpg
+ESP32_GENERIC-v1.29.0.bin
