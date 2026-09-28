@@ -2,11 +2,15 @@
 __pycache__/
 *.pyc
 .python-version
+.vscode/
+
 datos/fotos/*
 !datos/fotos/.gitkeep
+datos/fotos/preview.jpg
 datos/logs/*
 !datos/logs/.gitkeep
 datos/video/*
 !datos/video/.gitkeep
-datos/fotos/preview.jpg
+datos/grabar.txt
+
 ESP32_GENERIC-v1.29.0.bin
