@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="refresh" content="2">
+  <title>Indoor</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <h1>Indoor</h1>
+
+  <section>
+    {% if preview_v %}
+    <img src="/foto/preview.jpg?v={{ preview_v }}" alt="vivo">
+    {% else %}
+    <p>Sin imagen</p>
+    {% endif %}
+  </section>
+
+  <section>
+    <p>Fecha y hora: <strong>{{ ahora }}</strong></p>
+    {% if clima %}
+    <p>Temperatura: <strong>{{ clima.temp }} °C</strong></p>
+    <p>Humedad: <strong>{{ clima.hum }} %</strong></p>
+    {% else %}
+    <p>Temperatura: —</p>
+    <p>Humedad: —</p>
+    {% endif %}
+  </section>
+
+  <section>
+    <p>Grabación: <strong>{{ est_vid }}</strong></p>
+    <form method="post" action="/vid/on"><button type="submit">Grabar ON</button></form>
+    <form method="post" action="/vid/off"><button type="submit">Grabar OFF</button></form>
+  </section>
+
+  <section>
+    <p>Sensor: <strong>{{ est_sen }}</strong></p>
+    <form method="post" action="/sen/on"><button type="submit">Iniciar sensor</button></form>
+    <form method="post" action="/sen/off"><button type="submit">Detener sensor</button></form>
+  </section>
+</body>
+</html>

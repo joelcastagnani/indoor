@@ -1,0 +1,26 @@
+body {
+  font-family: sans-serif;
+  max-width: 32rem;
+  margin: 3rem auto;
+}
+
+section {
+  margin-bottom: 1.5rem;
+}
+
+form {
+  display: inline-block;
+  margin-right: 0.4rem;
+}
+
+button {
+  padding: 0.55rem 1rem;
+  font-size: 1rem;
+}
+
+img {
+  width: 100%;
+  max-width: 28rem;
+  height: auto;
+  display: block;
+}
