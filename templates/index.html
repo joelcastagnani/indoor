@@ -4,7 +4,7 @@
 
 <head>
   <meta charset="utf-8">
-  <!-- <meta http-equiv="refresh" content="2"> -->
+  <meta http-equiv="refresh" content="2">
   <title>Indoor</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
@@ -13,14 +13,6 @@
   <h1 class="tit">Indoor</h1>
 
   <div class="half1">
-    <section>
-      {% if preview_v %}
-      <img src="/foto/preview.jpg?v={{ preview_v }}" alt="vivo">
-      {% else %}
-      <p>Sin imagen</p>
-      {% endif %}
-    </section>
-
     <section>
       <div class="info">
         <p>Fecha y hora: <strong>{{ ahora }}</strong></p>
@@ -33,29 +25,37 @@
         {% endif %}
       </div>
     </section>
+
+    <section>
+      {% if preview_v %}
+      <img src="/foto/preview.jpg?v={{ preview_v }}" alt="vivo">
+      {% else %}
+      <p>Sin imagen</p>
+      {% endif %}
+    </section>
   </div>
 
   <div class="half2">
-    <section>
+    <section class="onoff">
       <p>Grabación: <strong>{{ est_vid }}</strong></p>
       <div class="switches">
         <form method="post" action="/vid/on">
-          {{ reward_button(text="Grabar ON", type="submit", mask_id="mask-vid-on") }}
+          {{ reward_button(text="ON", type="submit", mask_id="mask-vid-on") }}
         </form>
         <form method="post" action="/vid/off">
-          {{ reward_button(text="Grabar OFF", type="submit", mask_id="mask-vid-off") }}
+          {{ reward_button(text="OFF", type="submit", mask_id="mask-vid-off") }}
         </form>
       </div>
     </section>
 
-    <section>
+    <section class="onoff">
       <p>Sensor: <strong>{{ est_sen }}</strong></p>
       <div class="switches">
         <form method="post" action="/sen/on">
-          {{ reward_button(text="Sensor ON", type="submit", mask_id="mask-sen-on") }}
+          {{ reward_button(text="ON", type="submit", mask_id="mask-sen-on") }}
         </form>
         <form method="post" action="/sen/off">
-          {{ reward_button(text="Sensor OFF", type="submit", mask_id="mask-sen-off") }}
+          {{ reward_button(text="OFF", type="submit", mask_id="mask-sen-off") }}
         </form>
       </div>
     </section>

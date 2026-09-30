@@ -3,19 +3,22 @@
   --titulos: #009862;
 }
 
+html{display: flex;flex-direction: column;align-items: center;justify-content: center;height: 100%;}
+
 body {
   font-family: jetbrains-mono, monospace;
   background-color: var(--fondo);
   padding: 10px;
   display: flex;
   flex-direction: column;
+  border: 3px solid #D8D2C6;
+  border-radius: 10px;
 }
+
 section {
-  border: 1px solid #D8D2C6;
   border-radius: 10px;
   padding: 10px;
-  margin: 10px;
-  width: 50%;
+  width: 40%;
   margin: 0 auto;
   margin-bottom: 10px;
   color: var(--titulos);
@@ -24,19 +27,22 @@ section {
   flex-direction: column;
   align-items: center;
 }
+
 button {
   border: 1px solid black;
 }
+
 img {
-  max-width: 50%;
+  max-width: 80%;
 }
 
-.info{
+.info {
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: left;
+  align-items: center;
 }
+
 .tit {
   width: 50%;
   text-align: center;
@@ -44,21 +50,32 @@ img {
   margin-left: auto;
   margin-right: auto;
 }
-.switches{
+
+.switches {
   margin: auto;
   width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: center;
 }
-.onoff{
+
+.onoff {
   margin: 10px;
+  border: 3px solid #D8D2C6;
+  width: 30%;
 }
-.half1{
-  border: 1px solid #D8D2C6;
+
+.half1 {
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
 }
-.half2{
-  border: 1px solid #D8D2C6;
+
+.half2 {
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+  justify-content: space-around;
 }
 
 /* From Uiverse.io by vinodjangid07 */
@@ -75,6 +92,7 @@ img {
   transition: all 0.3s;
   margin: 10px;
 }
+
 .IconContainer {
   width: 40px;
   height: 40px;
@@ -84,13 +102,16 @@ img {
   justify-content: center;
   position: relative;
 }
+
 .IconContainer svg {
   width: 40%;
   z-index: 3;
 }
+
 .box-top {
   transition: all 0.3s;
 }
+
 .text {
   color: #D8D2C6;
   width: 70px;
@@ -99,19 +120,23 @@ img {
   color: #6a8ef6;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   font-weight: 600;
 }
+
 .reward-btn:hover .IconContainer .box-top {
   transform: translateY(-5px);
 }
+
 .reward-btn:hover {
   background-color: #202531;
 }
+
 .reward-btn:hover .coin {
   transform: translateY(-5px);
   transition-delay: 0.2s;
 }
+
 .coin {
   width: 25%;
   height: 25%;
@@ -123,5 +148,5 @@ img {
   border: 2px solid #A6B9BE;
   margin-top: 4px;
 }
-/* From Uiverse.io by vinodjangid07 */
 
+/* From Uiverse.io by vinodjangid07 */
