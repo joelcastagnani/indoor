@@ -28,7 +28,7 @@ button {
   border: 1px solid black;
 }
 img {
-  border: 1px solid black;
+  max-width: 50%;
 }
 
 .info{
@@ -54,7 +54,12 @@ img {
 .onoff{
   margin: 10px;
 }
-
+.half1{
+  border: 1px solid #D8D2C6;
+}
+.half2{
+  border: 1px solid #D8D2C6;
+}
 
 /* From Uiverse.io by vinodjangid07 */
 .reward-btn {
@@ -119,3 +124,4 @@ img {
   margin-top: 4px;
 }
 /* From Uiverse.io by vinodjangid07 */
+

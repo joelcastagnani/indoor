@@ -2,10 +2,6 @@
 <!doctype html>
 <html lang="es">
 
-/* 
-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
-*/
-
 <head>
   <meta charset="utf-8">
   <!-- <meta http-equiv="refresh" content="2"> -->
@@ -16,50 +12,54 @@ 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
 <body>
   <h1 class="tit">Indoor</h1>
 
-  <section>
-    {% if preview_v %}
-    <img src="/foto/preview.jpg?v={{ preview_v }}" alt="vivo">
-    {% else %}
-    <p>Sin imagen</p>
-    {% endif %}
-  </section>
-
-  <section>
-    <div class="info">
-      <p>Fecha y hora: <strong>{{ ahora }}</strong></p>
-      {% if clima %}
-      <p>Temperatura: <strong>{{ clima.temp }} °C</strong></p>
-      <p>Humedad: <strong>{{ clima.hum }} %</strong></p>
+  <div class="half1">
+    <section>
+      {% if preview_v %}
+      <img src="/foto/preview.jpg?v={{ preview_v }}" alt="vivo">
       {% else %}
-      <p>Temperatura: —</p>
-      <p>Humedad: —</p>
+      <p>Sin imagen</p>
       {% endif %}
-    </div>
-  </section>
+    </section>
 
     <section>
-    <p>Grabación: <strong>{{ est_vid }}</strong></p>
-    <div class="switches">
-      <form method="post" action="/vid/on">
-        {{ reward_button(text="Grabar ON", type="submit", mask_id="mask-vid-on") }}
-      </form>
-      <form method="post" action="/vid/off">
-        {{ reward_button(text="Grabar OFF", type="submit", mask_id="mask-vid-off") }}
-      </form>
-    </div>
-  </section>
+      <div class="info">
+        <p>Fecha y hora: <strong>{{ ahora }}</strong></p>
+        {% if clima %}
+        <p>Temperatura: <strong>{{ clima.temp }} °C</strong></p>
+        <p>Humedad: <strong>{{ clima.hum }} %</strong></p>
+        {% else %}
+        <p>Temperatura: —</p>
+        <p>Humedad: —</p>
+        {% endif %}
+      </div>
+    </section>
+  </div>
 
-  <section>
-    <p>Sensor: <strong>{{ est_sen }}</strong></p>
-    <div class="switches">
-      <form method="post" action="/sen/on">
-        {{ reward_button(text="Sensor ON", type="submit", mask_id="mask-sen-on") }}
-      </form>
-      <form method="post" action="/sen/off">
-        {{ reward_button(text="Sensor OFF", type="submit", mask_id="mask-sen-off") }}
-      </form>
-    </div>
-  </section>
+  <div class="half2">
+    <section>
+      <p>Grabación: <strong>{{ est_vid }}</strong></p>
+      <div class="switches">
+        <form method="post" action="/vid/on">
+          {{ reward_button(text="Grabar ON", type="submit", mask_id="mask-vid-on") }}
+        </form>
+        <form method="post" action="/vid/off">
+          {{ reward_button(text="Grabar OFF", type="submit", mask_id="mask-vid-off") }}
+        </form>
+      </div>
+    </section>
+
+    <section>
+      <p>Sensor: <strong>{{ est_sen }}</strong></p>
+      <div class="switches">
+        <form method="post" action="/sen/on">
+          {{ reward_button(text="Sensor ON", type="submit", mask_id="mask-sen-on") }}
+        </form>
+        <form method="post" action="/sen/off">
+          {{ reward_button(text="Sensor OFF", type="submit", mask_id="mask-sen-off") }}
+        </form>
+      </div>
+    </section>
+  </div>
 </body>
 
 </html>
