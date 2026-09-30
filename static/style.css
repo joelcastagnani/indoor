@@ -1,26 +1,126 @@
+/* 
+#34403A background
+#009862 titulo y subtitulo
+*/
+
+:root {
+  --fondo: #0B161E;
+  --titulos: #009862;
+}
+
 body {
-  font-family: sans-serif;
-  max-width: 32rem;
-  margin: 3rem auto;
+  font-family: jetbrains-mono, monospace;
+  background-color: var(--fondo);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
 }
-
 section {
-  margin-bottom: 1.5rem;
-}
+  border: 1px solid #D8D2C6;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px;
+  width: 50%;
+  margin: 0 auto;
+  margin-bottom: 10px;
+  color: var(--titulos);
 
-form {
-  display: inline-block;
-  margin-right: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-
 button {
-  padding: 0.55rem 1rem;
-  font-size: 1rem;
+  border: 1px solid black;
+}
+img {
+  border: 1px solid black;
 }
 
-img {
+.info{
   width: 100%;
-  max-width: 28rem;
-  height: auto;
-  display: block;
+  display: flex;
+  flex-direction: column;
+  align-items: left;
 }
+.tit {
+  width: 50%;
+  text-align: center;
+  color: var(--titulos);
+  margin-left: auto;
+  margin-right: auto;
+}
+.switches{
+  margin: auto;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.onoff{
+  margin: 10px;
+}
+
+
+/* From Uiverse.io by vinodjangid07 */
+.reward-btn {
+  width: 120px;
+  height: 40px;
+  background-color: #51625C;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin: 10px;
+}
+.IconContainer {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.IconContainer svg {
+  width: 40%;
+  z-index: 3;
+}
+.box-top {
+  transition: all 0.3s;
+}
+.text {
+  color: #D8D2C6;
+  width: 70px;
+  height: 100%;
+  font-size: 13px;
+  color: #6a8ef6;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-weight: 600;
+}
+.reward-btn:hover .IconContainer .box-top {
+  transform: translateY(-5px);
+}
+.reward-btn:hover {
+  background-color: #202531;
+}
+.reward-btn:hover .coin {
+  transform: translateY(-5px);
+  transition-delay: 0.2s;
+}
+.coin {
+  width: 25%;
+  height: 25%;
+  background-color: #0B161E;
+  position: absolute;
+  border-radius: 50%;
+  transition: all 0.3s;
+  z-index: 1;
+  border: 2px solid #A6B9BE;
+  margin-top: 4px;
+}
+/* From Uiverse.io by vinodjangid07 */

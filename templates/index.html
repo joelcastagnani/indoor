@@ -1,13 +1,16 @@
+{% from "_macros.html" import reward_button %}
 <!doctype html>
 <html lang="es">
+
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="refresh" content="2">
+  <!-- <meta http-equiv="refresh" content="2"> -->
   <title>Indoor</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
-  <h1>Indoor</h1>
+  <h1 class="tit">Indoor</h1>
 
   <section>
     {% if preview_v %}
@@ -18,26 +21,41 @@
   </section>
 
   <section>
-    <p>Fecha y hora: <strong>{{ ahora }}</strong></p>
-    {% if clima %}
-    <p>Temperatura: <strong>{{ clima.temp }} °C</strong></p>
-    <p>Humedad: <strong>{{ clima.hum }} %</strong></p>
-    {% else %}
-    <p>Temperatura: —</p>
-    <p>Humedad: —</p>
-    {% endif %}
+    <div class="info">
+      <p>Fecha y hora: <strong>{{ ahora }}</strong></p>
+      {% if clima %}
+      <p>Temperatura: <strong>{{ clima.temp }} °C</strong></p>
+      <p>Humedad: <strong>{{ clima.hum }} %</strong></p>
+      {% else %}
+      <p>Temperatura: —</p>
+      <p>Humedad: —</p>
+      {% endif %}
+    </div>
   </section>
 
-  <section>
+    <section>
     <p>Grabación: <strong>{{ est_vid }}</strong></p>
-    <form method="post" action="/vid/on"><button type="submit">Grabar ON</button></form>
-    <form method="post" action="/vid/off"><button type="submit">Grabar OFF</button></form>
+    <div class="switches">
+      <form method="post" action="/vid/on">
+        {{ reward_button(text="Grabar ON", type="submit", mask_id="mask-vid-on") }}
+      </form>
+      <form method="post" action="/vid/off">
+        {{ reward_button(text="Grabar OFF", type="submit", mask_id="mask-vid-off") }}
+      </form>
+    </div>
   </section>
 
   <section>
     <p>Sensor: <strong>{{ est_sen }}</strong></p>
-    <form method="post" action="/sen/on"><button type="submit">Iniciar sensor</button></form>
-    <form method="post" action="/sen/off"><button type="submit">Detener sensor</button></form>
+    <div class="switches">
+      <form method="post" action="/sen/on">
+        {{ reward_button(text="Sensor ON", type="submit", mask_id="mask-sen-on") }}
+      </form>
+      <form method="post" action="/sen/off">
+        {{ reward_button(text="Sensor OFF", type="submit", mask_id="mask-sen-off") }}
+      </form>
+    </div>
   </section>
 </body>
+
 </html>

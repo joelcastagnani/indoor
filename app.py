@@ -37,7 +37,7 @@ def parse_clima():
 
 @app.get("/")
 def index():
-    est_sen = "prendido" if vivo(sen) else "apagado"
+    est_sen = "ON" if vivo(sen) else "OFF"
     est_vid = "ON" if grabacion_on() else "OFF"
     ahora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     clima = parse_clima()
@@ -94,4 +94,6 @@ def sen_off():
 
 
 if __name__ == "__main__":
+    app.config["TEMPLATES_AUTO_RELOAD"] = True
+    app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0
     app.run(host="127.0.0.1", port=5000, debug=False)
