@@ -44,6 +44,7 @@ while True:
             "-i", dispositivo,
             "-t", "600",
             "-c:v", "copy",
+            "-movflags", "+frag_keyframe+empty_moov+default_base_moof",
             str(carpeta / nombre),
             "-vf", "fps=1", "-update", "1", str(preview),
         ]
