@@ -4,6 +4,7 @@
 
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="refresh" content="2">
   <title>Indoor</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
@@ -12,9 +13,16 @@
 <body>
   <h1 class="tit">Indoor</h1>
 
+  <button type="button" id="fs">Pantalla completa</button>
+  <script>
+    document.getElementById("fs").onclick = function () {
+      document.documentElement.requestFullscreen();
+    };
+  </script>
+
   <div class="half1">
     <section>
-      <div class="info">
+      <div class="info box">
         <p>Fecha y hora: <strong>{{ ahora }}</strong></p>
         {% if clima %}
         <p>Temperatura: <strong>{{ clima.temp }} °C</strong></p>
@@ -23,20 +31,21 @@
         <p>Temperatura: —</p>
         <p>Humedad: —</p>
         {% endif %}
-      </div>
     </section>
 
-    <section>
+    <section class="box">
       {% if preview_v %}
       <img src="/foto/preview.jpg?v={{ preview_v }}" alt="vivo">
       {% else %}
-      <p>Sin imagen</p>
+      <div class="img box">
+        <p>Sin imagen</p>
+      </div>
       {% endif %}
     </section>
   </div>
 
   <div class="half2">
-    <section class="onoff">
+    <section class="onoff box">
       <p>Grabación: <strong>{{ est_vid }}</strong></p>
       <div class="switches">
         <form method="post" action="/vid/on">
@@ -48,7 +57,7 @@
       </div>
     </section>
 
-    <section class="onoff">
+    <section class="onoff box">
       <p>Sensor: <strong>{{ est_sen }}</strong></p>
       <div class="switches">
         <form method="post" action="/sen/on">
