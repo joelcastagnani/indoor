@@ -4,8 +4,8 @@ from datetime import datetime
 from pathlib import Path
 
 from flask import Flask, redirect, url_for, send_from_directory, render_template
-
 app = Flask(__name__)
+
 ROOT = Path(__file__).resolve().parent
 FOTOS = ROOT / "datos" / "fotos"
 LOG = ROOT / "datos" / "logs" / "sensor.csv"
@@ -90,6 +90,26 @@ def sen_off():
             sen.wait(timeout=8)
         except subprocess.TimeoutExpired:
             sen.kill()
+    return redirect(url_for("index"))
+
+
+@app.post("/rele/on")
+def rele_on():
+    subprocess.run(
+        ["mpremote", "connect", "/dev/ttyUSB0", "exec", "import rele; rele.on()"],
+        cwd=ROOT,
+        timeout=8,
+    )
+    return redirect(url_for("index"))
+
+
+@app.post("/rele/off")
+def rele_off():
+    subprocess.run(
+        ["mpremote", "connect", "/dev/ttyUSB0", "exec", "import rele; rele.off()"],
+        cwd=ROOT,
+        timeout=8,
+    )
     return redirect(url_for("index"))
 
 

@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="refresh" content="2">
+  <!-- <meta http-equiv="refresh" content="2"> -->
   <title>Indoor</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
@@ -58,13 +58,22 @@
     </section>
 
     <section class="onoff box">
-      <p>Sensor: <strong>{{ est_sen }}</strong></p>
+            <p>Sensor: <strong>{{ est_sen }}</strong></p>
       <div class="switches">
         <form method="post" action="/sen/on">
           {{ reward_button(text="ON", type="submit", mask_id="mask-sen-on") }}
         </form>
         <form method="post" action="/sen/off">
           {{ reward_button(text="OFF", type="submit", mask_id="mask-sen-off") }}
+        </form>
+      </div>
+      <p>Relé: canal 1</p>
+      <div class="switches">
+        <form method="post" action="/rele/on">
+          {{ reward_button(text="ON", type="submit", mask_id="mask-rele-on") }}
+        </form>
+        <form method="post" action="/rele/off">
+          {{ reward_button(text="OFF", type="submit", mask_id="mask-rele-off") }}
         </form>
       </div>
     </section>
