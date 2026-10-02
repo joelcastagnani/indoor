@@ -3,7 +3,7 @@ from datetime import datetime
 from pathlib import Path
 from time import sleep
 
-dispositivo = "/dev/video2"
+dispositivo = "/dev/video0"
 preview = Path("datos/fotos/preview.jpg")
 carpeta = Path("datos/video")
 bandera = Path("datos/grabar.txt")
@@ -23,9 +23,20 @@ def grabar_activado():
 
 print("preview 24h; mp4 si grabar=on y 18:00-12:00. Ctrl+C para salir.")
 
+def fijar_exposicion():
+    subprocess.run(
+        ["v4l2-ctl", "-d", dispositivo, "--set-ctrl=auto_exposure=1"],
+        check=False,
+    )
+    subprocess.run(
+        ["v4l2-ctl", "-d", dispositivo, "--set-ctrl=exposure_time_absolute=10"],
+        check=False,
+    )
+
 while True:
     if en_luz() and grabar_activado():
         print("GRABANDO 10 min + preview", datetime.now().strftime("%H:%M:%S"))
+        nombre = datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + ".mp4"
         comando = [
             "ffmpeg", "-y", "-hide_banner", "-loglevel", "error",
             "-f", "v4l2", "-input_format", "mjpeg",
@@ -33,9 +44,7 @@ while True:
             "-i", dispositivo,
             "-t", "600",
             "-c:v", "copy",
-            "-f", "segment", "-segment_time", "600",
-            "-reset_timestamps", "1", "-strftime", "1",
-            str(carpeta / "%Y-%m-%d_%H-%M-%S.mp4"),
+            str(carpeta / nombre),
             "-vf", "fps=1", "-update", "1", str(preview),
         ]
     else:
@@ -48,4 +57,5 @@ while True:
             "-t", "60",
             "-vf", "fps=1", "-update", "1", str(preview),
         ]
+    fijar_exposicion()
     subprocess.run(comando)
