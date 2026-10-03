@@ -7,10 +7,16 @@ carpeta = Path("datos/fotos")
 intervalo = 30  # segundos; más adelante lo cambiamos
 
 print("loop de fotos. Ctrl+C para salir.")
-
 while True:
     nombre = datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + ".jpg"
     destino = carpeta / nombre
+    subprocess.run(
+        ["v4l2-ctl", "-d", "/dev/video0",
+         "--set-ctrl=auto_exposure=1",
+         "--set-ctrl=exposure_time_absolute=10",
+         "--set-ctrl=gain=0"],
+        check=False,
+    )
     comando = [
         "ffmpeg",
         "-y",
@@ -18,7 +24,7 @@ while True:
         "-loglevel", "error",
         "-f", "v4l2",
         "-video_size", "1280x720",
-        "-i", "/dev/video2",
+        "-i", "/dev/video0",
         "-frames:v", "1",
         str(destino),
     ]
