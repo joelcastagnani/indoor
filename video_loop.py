@@ -54,7 +54,7 @@ while True:
             "-video_size", "1280x720", "-framerate", "15",
             "-t", "600",
             "-i", dispositivo,
-            "-c:v", "copy",
+            "-c:v", "libx264", "-preset", "veryfast", "-crf", "28",
             "-movflags", "+frag_keyframe+empty_moov+default_base_moof",
             str(carpeta / nombre),
             "-vf", "fps=1", "-update", "1", str(preview),
