@@ -44,7 +44,9 @@
   <button type="button" id="fs">Pantalla completa</button>
   <script>
     document.getElementById("fs").onclick = function () {
-      document.documentElement.requestFullscreen();
+      var foto = document.getElementById("preview");
+      if (!foto) return;
+      foto.requestFullscreen();
     };
   </script>
 
