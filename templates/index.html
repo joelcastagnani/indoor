@@ -10,6 +10,24 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
+<script>
+  async function refrescar() {
+    const r = await fetch("/estado");
+    const d = await r.json();
+    const ahora = document.getElementById("ahora");
+    if (ahora && d.ahora) ahora.textContent = d.ahora;
+    const temp = document.getElementById("temp");
+    if (temp && d.temp != null) temp.textContent = d.temp + " °C";
+    const hum = document.getElementById("hum");
+    if (hum && d.hum != null) hum.textContent = d.hum + " %";
+    const img = document.getElementById("preview");
+    if (img && d.preview_v && !img.src.endsWith("v=" + d.preview_v)) {
+      img.src = "/foto/preview.jpg?v=" + d.preview_v;
+    }
+  }
+  setInterval(refrescar, 3000);
+</script>
+
 <body>
   <h1 class="tit">Indoor</h1>
 
@@ -23,10 +41,10 @@
   <div class="half1">
     <section>
       <div class="info box">
-        <p>Fecha y hora: <strong>{{ ahora }}</strong></p>
+        <p>Fecha y hora: <strong id="ahora">{{ ahora }}</strong></p>
         {% if clima %}
-        <p>Temperatura: <strong>{{ clima.temp }} °C</strong></p>
-        <p>Humedad: <strong>{{ clima.hum }} %</strong></p>
+        <p>Temperatura: <strong id="temp">{{ clima.temp }} °C</strong></p>
+        <p>Humedad: <strong id="hum">{{ clima.hum }} %</strong></p>
         {% else %}
         <p>Temperatura: —</p>
         <p>Humedad: —</p>
@@ -35,7 +53,7 @@
 
     <section class="box">
       {% if preview_v %}
-      <img src="/foto/preview.jpg?v={{ preview_v }}" alt="vivo">
+      <img id="preview" src="/foto/preview.jpg?v={{ preview_v }}" alt="vivo">
       {% else %}
       <div class="img box">
         <p>Sin imagen</p>
@@ -58,7 +76,7 @@
     </section>
 
     <section class="onoff box">
-            <p>Sensor: <strong>{{ est_sen }}</strong></p>
+      <p>Sensor: <strong>{{ est_sen }}</strong></p>
       <div class="switches">
         <form method="post" action="/sen/on">
           {{ reward_button(text="ON", type="submit", mask_id="mask-sen-on") }}

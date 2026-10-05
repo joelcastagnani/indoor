@@ -3,7 +3,7 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-from flask import Flask, redirect, url_for, send_from_directory, render_template
+from flask import Flask, redirect, url_for, send_from_directory, render_template, jsonify
 app = Flask(__name__)
 
 ROOT = Path(__file__).resolve().parent
@@ -57,6 +57,16 @@ def index():
 def servir_foto(nombre):
     return send_from_directory(FOTOS, nombre)
 
+@app.get("/estado")
+def estado():
+    clima = parse_clima()
+    preview = FOTOS / "preview.jpg"
+    return jsonify(
+        ahora=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        temp=clima["temp"] if clima else None,
+        hum=clima["hum"] if clima else None,
+        preview_v=int(preview.stat().st_mtime) if preview.exists() else None,
+    )
 
 @app.post("/vid/on")
 def vid_on():
