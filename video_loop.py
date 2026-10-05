@@ -52,7 +52,7 @@ while True:
             "ffmpeg", "-y", "-hide_banner", "-loglevel", "error",
             "-f", "v4l2", "-input_format", "mjpeg",
             "-video_size", "1280x720", "-framerate", "15",
-            "-t", "600",
+            "-t", "3600",
             "-i", dispositivo,
             "-c:v", "libx264", "-preset", "veryfast", "-crf", "28",
             "-movflags", "+frag_keyframe+empty_moov+default_base_moof",
