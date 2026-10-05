@@ -3,7 +3,12 @@
   --titulos: #009862;
 }
 
-html{display: flex;flex-direction: column;align-items: center;justify-content: center;height: 100%;}
+html {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
 
 body {
   font-family: jetbrains-mono, monospace;
@@ -11,13 +16,13 @@ body {
   padding: 10px;
   display: flex;
   flex-direction: column;
-  border: 3px solid var(--titulos);
+  border: 3px solid #51625C;
   border-radius: 10px;
   width: 95%;
 }
+
 section {
   border-radius: 10px;
-  /* padding: 10px; */
   margin-bottom: 10px;
   color: var(--titulos);
 
@@ -26,23 +31,24 @@ section {
   align-items: center;
   width: 100%;
   padding: 10px;
-
-  border: #009862  3px red;
 }
+
 button {
   border: 1px solid black;
 }
+
 img {
   width: 80%;
   border: 3px solid #D8D2C6;
 }
 
-.img{
+.img {
   border: 3px solid #51625C;
   border-radius: 10px;
   width: 100%;
   height: 100%;
 }
+
 .info {
   display: flex;
   flex-direction: column;
@@ -51,6 +57,7 @@ img {
   border-radius: 10px;
   width: 100%;
 }
+
 .tit {
   width: 50%;
   text-align: center;
@@ -58,27 +65,49 @@ img {
   margin-left: auto;
   margin-right: auto;
 }
+
 .switches {
   margin: auto;
   display: flex;
   flex-direction: row;
   justify-content: center;
 }
+
 .onoff {
   margin: 10px;
   border: 3px solid #51625C;
 }
+
 .half1 {
   display: flex;
   flex-direction: row;
-  /* padding: 10px; */
   justify-content: center;
 }
+
 .half2 {
   display: flex;
   flex-direction: row;
-  /* padding: 10px; */
   justify-content: center;
+}
+
+.rele {
+  display: flex;
+  padding: 10px;
+  border: 3px solid #51625C;
+  border-radius: 10px;
+  margin: 10px;
+}
+
+.relebox{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0;
+  border: none;
+}
+
+.actions{
+  height: 105px;
 }
 
 /* From Uiverse.io by vinodjangid07 */
@@ -95,6 +124,7 @@ img {
   transition: all 0.3s;
   margin: 10px;
 }
+
 .IconContainer {
   width: 40px;
   height: 40px;
@@ -104,13 +134,16 @@ img {
   justify-content: center;
   position: relative;
 }
+
 .IconContainer svg {
   width: 40%;
   z-index: 3;
 }
+
 .box-top {
   transition: all 0.3s;
 }
+
 .text {
   color: #D8D2C6;
   width: 70px;
@@ -122,16 +155,20 @@ img {
   justify-content: center;
   font-weight: 600;
 }
+
 .reward-btn:hover .IconContainer .box-top {
   transform: translateY(-5px);
 }
+
 .reward-btn:hover {
   background-color: #202531;
 }
+
 .reward-btn:hover .coin {
   transform: translateY(-5px);
   transition-delay: 0.2s;
 }
+
 .coin {
   width: 25%;
   height: 25%;
@@ -143,9 +180,11 @@ img {
   border: 2px solid #A6B9BE;
   margin-top: 4px;
 }
+
 /* From Uiverse.io by vinodjangid07 */
 
 @media (max-width: 768px) {
+
   .half1,
   .half2 {
     flex-direction: column;
@@ -157,6 +196,7 @@ img {
     margin: 0 auto;
     margin-bottom: 10px;
   }
+
   section {
     width: 95%;
   }

@@ -77,7 +77,8 @@
   </div>
 
   <div class="half2">
-    <section class="onoff box">
+
+    <section class="onoff box actions">
       <p>Grabación: <strong>{{ est_vid }}</strong></p>
       <div class="switches">
         <form method="post" action="/vid/on">
@@ -89,8 +90,9 @@
       </div>
     </section>
 
-    <section class="onoff box">
+    <section class="onoff box actions">
       <p>Sensor: <strong>{{ est_sen }}</strong></p>
+
       <div class="switches">
         <form method="post" action="/sen/on">
           {{ reward_button(text="ON", type="submit", mask_id="mask-sen-on") }}
@@ -99,14 +101,61 @@
           {{ reward_button(text="OFF", type="submit", mask_id="mask-sen-off") }}
         </form>
       </div>
-      <p>Relé: canal 1</p>
-      <div class="switches">
-        <form method="post" action="/rele/on">
-          {{ reward_button(text="ON", type="submit", mask_id="mask-rele-on") }}
-        </form>
-        <form method="post" action="/rele/off">
-          {{ reward_button(text="OFF", type="submit", mask_id="mask-rele-off") }}
-        </form>
+
+    </section>
+
+
+    <section class="onoff relebox">
+      <div class="rele">
+        <p>Relé: canal 1</p>
+
+        <div class="switchesrele">
+          <form method="post" action="/rele/on">
+            {{ reward_button(text="ON", type="submit", mask_id="mask-rele-on") }}
+          </form>
+          <form method="post" action="/rele/off">
+            {{ reward_button(text="OFF", type="submit", mask_id="mask-rele-off") }}
+          </form>
+        </div>
+      </div>
+
+      <div class="rele">
+        <p>Relé: canal 1</p>
+
+        <div class="switchesrele">
+          <form method="post" action="/rele/on">
+            {{ reward_button(text="ON", type="submit", mask_id="mask-rele-on") }}
+          </form>
+          <form method="post" action="/rele/off">
+            {{ reward_button(text="OFF", type="submit", mask_id="mask-rele-off") }}
+          </form>
+        </div>
+      </div>
+
+      <div class="rele">
+        <p>Relé: canal 1</p>
+
+        <div class="switchesrele">
+          <form method="post" action="/rele/on">
+            {{ reward_button(text="ON", type="submit", mask_id="mask-rele-on") }}
+          </form>
+          <form method="post" action="/rele/off">
+            {{ reward_button(text="OFF", type="submit", mask_id="mask-rele-off") }}
+          </form>
+        </div>
+      </div>
+
+      <div class="rele">
+        <p>Relé: canal 1</p>
+
+        <div class="switchesrele">
+          <form method="post" action="/rele/on">
+            {{ reward_button(text="ON", type="submit", mask_id="mask-rele-on") }}
+          </form>
+          <form method="post" action="/rele/off">
+            {{ reward_button(text="OFF", type="submit", mask_id="mask-rele-off") }}
+          </form>
+        </div>
       </div>
     </section>
   </div>
