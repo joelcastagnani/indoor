@@ -106,7 +106,7 @@ def sen_off():
 @app.post("/rele/on")
 def rele_on():
     subprocess.run(
-        ["mpremote", "connect", "/dev/ttyUSB0", "exec", "import rele; rele.on()"],
+        ["/home/rideparkcity1/proyectos/indoor/.venv/bin/mpremote", "connect", "/dev/ttyUSB0", "exec", "import rele; rele.on()"],
         cwd=ROOT,
         timeout=8,
     )
@@ -116,7 +116,7 @@ def rele_on():
 @app.post("/rele/off")
 def rele_off():
     subprocess.run(
-        ["mpremote", "connect", "/dev/ttyUSB0", "exec", "import rele; rele.off()"],
+        ["/home/rideparkcity1/proyectos/indoor/.venv/bin/mpremote", "connect", "/dev/ttyUSB0", "exec", "import rele; rele.off()"],
         cwd=ROOT,
         timeout=8,
     )
