@@ -12,5 +12,6 @@ datos/logs/*
 datos/video/*
 !datos/video/.gitkeep
 datos/grabar.txt
+datos/rele.txt
 
 ESP32_GENERIC-v1.29.0.bin
