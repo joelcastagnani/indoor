@@ -42,6 +42,7 @@
   <h1 class="tit">Indoor</h1>
 
   <button type="button" id="fs">Pantalla completa</button>
+
   <script>
     document.getElementById("fs").onclick = function () {
       var foto = document.getElementById("preview");
@@ -77,7 +78,6 @@
   </div>
 
   <div class="half2">
-
     <section class="onoff box actions">
       <p>Grabación: <strong>{{ est_vid }}</strong></p>
       <div class="switches">
@@ -104,11 +104,9 @@
 
     </section>
 
-
     <section class="onoff relebox">
       <div class="rele">
         <p>Relé: canal 1 — <strong>{{ est_rele }}</strong></p>
-
         <div class="switchesrele">
           <form method="post" action="/rele/on">
             {{ reward_button(text="ON", type="submit", mask_id="mask-rele-on") }}
@@ -120,40 +118,40 @@
       </div>
 
       <div class="rele">
-        <p>Relé: canal 1</p>
+        <p>Relé: canal 2 — <strong>{{ est_rele2 }}</strong></p>
 
         <div class="switchesrele">
-          <form method="post" action="/rele/on">
-            {{ reward_button(text="ON", type="submit", mask_id="mask-rele-on") }}
+          <form method="post" action="/rele2/on">
+            {{ reward_button(text="ON", type="submit", mask_id="mask-rele2-on") }}
           </form>
-          <form method="post" action="/rele/off">
-            {{ reward_button(text="OFF", type="submit", mask_id="mask-rele-off") }}
+          <form method="post" action="/rele2/off">
+            {{ reward_button(text="OFF", type="submit", mask_id="mask-rele2-off") }}
           </form>
         </div>
       </div>
 
       <div class="rele">
-        <p>Relé: canal 1</p>
+        <p>Relé: canal 3</p>
 
         <div class="switchesrele">
-          <form method="post" action="/rele/on">
-            {{ reward_button(text="ON", type="submit", mask_id="mask-rele-on") }}
+          <form method="post" action="/rele3/on">
+            {{ reward_button(text="ON", type="submit", mask_id="mask-rele3-on") }}
           </form>
-          <form method="post" action="/rele/off">
-            {{ reward_button(text="OFF", type="submit", mask_id="mask-rele-off") }}
+          <form method="post" action="/rele3/off">
+            {{ reward_button(text="OFF", type="submit", mask_id="mask-rele3-off") }}
           </form>
         </div>
       </div>
 
       <div class="rele">
-        <p>Relé: canal 1</p>
+        <p>Relé: canal 4</p>
 
         <div class="switchesrele">
-          <form method="post" action="/rele/on">
-            {{ reward_button(text="ON", type="submit", mask_id="mask-rele-on") }}
+          <form method="post" action="/rele4/on">
+            {{ reward_button(text="ON", type="submit", mask_id="mask-rele4-on") }}
           </form>
-          <form method="post" action="/rele/off">
-            {{ reward_button(text="OFF", type="submit", mask_id="mask-rele-off") }}
+          <form method="post" action="/rele4/off">
+            {{ reward_button(text="OFF", type="submit", mask_id="mask-rele4-off") }}
           </form>
         </div>
       </div>
@@ -166,8 +164,7 @@
     f.addEventListener("submit", async function (ev) {
       ev.preventDefault();
       await fetch(f.action, { method: "POST" });
-      var fuerte = f.closest("section").querySelector("strong");
-      if (!fuerte) return;
+      var fuerte = f.closest(".rele").querySelector("strong"); if (!fuerte) return;
       fuerte.textContent = f.action.endsWith("/on") ? "ON" : "OFF";
     });
   });
