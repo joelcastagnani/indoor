@@ -161,4 +161,17 @@
   </div>
 </body>
 
+<script>
+  document.querySelectorAll("form").forEach(function (f) {
+    f.addEventListener("submit", async function (ev) {
+      ev.preventDefault();
+      await fetch(f.action, { method: "POST" });
+      var fuerte = f.closest("section").querySelector("strong");
+      if (!fuerte) return;
+      fuerte.textContent = f.action.endsWith("/on") ? "ON" : "OFF";
+    });
+  });
+</script>
+
+
 </html>
