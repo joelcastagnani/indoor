@@ -11,6 +11,7 @@ FOTOS = ROOT / "datos" / "fotos"
 LOG = ROOT / "datos" / "logs" / "sensor.csv"
 BANDERA = ROOT / "datos" / "grabar.txt"
 BANDERA_RELE = ROOT / "datos" / "rele.txt"
+BANDERA_RELE2 = ROOT / "datos" / "rele2.txt"
 sen = None
 
 
@@ -29,6 +30,10 @@ def rele_prendido():
         return False
     return BANDERA_RELE.read_text().strip().lower() == "on"
 
+def rele2_prendido():
+    if not BANDERA_RELE2.exists():
+        return False
+    return BANDERA_RELE2.read_text().strip().lower() == "on"
 
 def parse_clima():
     if not LOG.exists():
@@ -47,6 +52,7 @@ def index():
     est_sen = "ON" if vivo(sen) else "OFF"
     est_vid = "ON" if grabacion_on() else "OFF"
     est_rele = "ON" if rele_prendido() else "OFF"
+    est_rele2 = "ON" if rele2_prendido() else "OFF"
     ahora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     clima = parse_clima()
     preview = FOTOS / "preview.jpg"
@@ -56,6 +62,7 @@ def index():
         est_sen=est_sen,
         est_vid=est_vid,
         est_rele=est_rele,
+        est_rele2=est_rele2,
         ahora=ahora,
         clima=clima,
         preview_v=preview_v,
@@ -113,26 +120,38 @@ def sen_off():
             sen.kill()
     return redirect(url_for("index"))
 
+def aplicar_reles():
+    a = 1 if rele_prendido() else 0
+    b = 1 if rele2_prendido() else 0
+    subprocess.run(
+        ["/home/rideparkcity1/proyectos/indoor/.venv/bin/mpremote", "connect", "/dev/ttyUSB0", "exec",
+         "import rele; rele.aplicar(%d, %d)" % (a, b)],
+        cwd=ROOT,
+        timeout=8,
+    )
 
 @app.post("/rele/on")
 def rele_on():
-    subprocess.run(
-        ["/home/rideparkcity1/proyectos/indoor/.venv/bin/mpremote", "connect", "/dev/ttyUSB0", "exec", "import rele; rele.on()"],
-        cwd=ROOT,
-        timeout=8,
-    )
     BANDERA_RELE.write_text("on\n")
+    aplicar_reles()
     return redirect(url_for("index"))
-
 
 @app.post("/rele/off")
 def rele_off():
-    subprocess.run(
-        ["/home/rideparkcity1/proyectos/indoor/.venv/bin/mpremote", "connect", "/dev/ttyUSB0", "exec", "import rele; rele.off()"],
-        cwd=ROOT,
-        timeout=8,
-    )
     BANDERA_RELE.write_text("off\n")
+    aplicar_reles()
+    return redirect(url_for("index"))
+
+@app.post("/rele2/on")
+def rele2_on():
+    BANDERA_RELE2.write_text("on\n")
+    aplicar_reles()
+    return redirect(url_for("index"))
+
+@app.post("/rele2/off")
+def rele2_off():
+    BANDERA_RELE2.write_text("off\n")
+    aplicar_reles()
     return redirect(url_for("index"))
 
 
