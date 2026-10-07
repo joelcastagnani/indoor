@@ -10,6 +10,7 @@ ROOT = Path(__file__).resolve().parent
 FOTOS = ROOT / "datos" / "fotos"
 LOG = ROOT / "datos" / "logs" / "sensor.csv"
 BANDERA = ROOT / "datos" / "grabar.txt"
+BANDERA_RELE = ROOT / "datos" / "rele.txt"
 sen = None
 
 
@@ -21,6 +22,12 @@ def grabacion_on():
     if not BANDERA.exists():
         return False
     return BANDERA.read_text().strip().lower() == "on"
+
+
+def rele_prendido():
+    if not BANDERA_RELE.exists():
+        return False
+    return BANDERA_RELE.read_text().strip().lower() == "on"
 
 
 def parse_clima():
@@ -39,6 +46,7 @@ def parse_clima():
 def index():
     est_sen = "ON" if vivo(sen) else "OFF"
     est_vid = "ON" if grabacion_on() else "OFF"
+    est_rele = "ON" if rele_prendido() else "OFF"
     ahora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     clima = parse_clima()
     preview = FOTOS / "preview.jpg"
@@ -47,6 +55,7 @@ def index():
         "index.html",
         est_sen=est_sen,
         est_vid=est_vid,
+        est_rele=est_rele,
         ahora=ahora,
         clima=clima,
         preview_v=preview_v,
@@ -56,6 +65,7 @@ def index():
 @app.get("/foto/<nombre>")
 def servir_foto(nombre):
     return send_from_directory(FOTOS, nombre)
+
 
 @app.get("/estado")
 def estado():
@@ -67,6 +77,7 @@ def estado():
         hum=clima["hum"] if clima else None,
         preview_v=int(preview.stat().st_mtime) if preview.exists() else None,
     )
+
 
 @app.post("/vid/on")
 def vid_on():
@@ -110,6 +121,7 @@ def rele_on():
         cwd=ROOT,
         timeout=8,
     )
+    BANDERA_RELE.write_text("on\n")
     return redirect(url_for("index"))
 
 
@@ -120,6 +132,7 @@ def rele_off():
         cwd=ROOT,
         timeout=8,
     )
+    BANDERA_RELE.write_text("off\n")
     return redirect(url_for("index"))
 
 
