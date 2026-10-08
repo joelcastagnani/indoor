@@ -102,23 +102,19 @@ def vid_off():
 @app.post("/sen/on")
 def sen_on():
     global sen
-    if not vivo(sen):
+    ya = subprocess.run(["pgrep", "-f", "log_sensor.py"], stdout=subprocess.DEVNULL)
+    if ya.returncode != 0:
         sen = subprocess.Popen(
             [sys.executable, str(ROOT / "log_sensor.py")],
             cwd=ROOT,
         )
     return redirect(url_for("index"))
 
-
 @app.post("/sen/off")
 def sen_off():
     global sen
-    if vivo(sen):
-        sen.terminate()
-        try:
-            sen.wait(timeout=8)
-        except subprocess.TimeoutExpired:
-            sen.kill()
+    subprocess.run(["pkill", "-f", "log_sensor.py"])
+    sen = None
     return redirect(url_for("index"))
 
 

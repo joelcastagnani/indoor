@@ -1,5 +1,6 @@
 from datetime import datetime
 from pathlib import Path
+import termios
 import time
 import serial
 
@@ -17,9 +18,20 @@ def bit(path):
 def orden():
     return f"R {bit(rele1)} {bit(rele2)}\n"
 
+def medicion(linea):
+    return "," in linea and "rst:" not in linea and not linea.startswith("R ")
+
+def sin_corte(ser):
+    attrs = termios.tcgetattr(ser.fileno())
+    attrs[2] = attrs[2] & ~termios.HUPCL
+    termios.tcsetattr(ser.fileno(), termios.TCSANOW, attrs)
+    ser.dtr = False
+    ser.rts = False
+
 print("logueando. Ctrl+C para salir.")
 ser = None
 ultima = None
+ultima_fila = None
 while True:
     if pausa.exists():
         if ser is not None:
@@ -31,23 +43,27 @@ while True:
         ser = serial.Serial()
         ser.port = puerto
         ser.baudrate = 115200
-        ser.timeout = 3
+        ser.timeout = 0.2
         ser.dtr = False
         ser.rts = False
         ser.open()
-        ser.dtr = False
-        ser.rts = False
+        sin_corte(ser)
         time.sleep(2)
         ser.reset_input_buffer()
+        ser.timeout = 3
         ultima = None
     ahora_orden = orden()
     if ahora_orden != ultima:
         ser.write(ahora_orden.encode())
         ultima = ahora_orden
     linea = ser.readline().decode("utf-8", errors="ignore").strip()
-    if linea and "," in linea and "rst:" not in linea and not linea.startswith("R "):
-        ahora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        fila = f"{ahora},{linea}"
-        print(fila)
-        with salida.open("a") as f:
-            f.write(fila + "\n")
+    if not medicion(linea):
+        continue
+    ahora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    fila = f"{ahora},{linea}"
+    if fila == ultima_fila:
+        continue
+    ultima_fila = fila
+    print(fila)
+    with salida.open("a") as f:
+        f.write(fila + "\n")

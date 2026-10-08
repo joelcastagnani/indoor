@@ -164,7 +164,14 @@
     f.addEventListener("submit", async function (ev) {
       ev.preventDefault();
       await fetch(f.action, { method: "POST" });
-      var fuerte = f.closest(".rele").querySelector("strong"); if (!fuerte) return;
+      var nodo = f;
+      var fuerte = null;
+      while (nodo && nodo !== document.body) {
+        fuerte = nodo.querySelector("strong");
+        if (fuerte) break;
+        nodo = nodo.parentElement;
+      }
+      if (!fuerte) return;
       fuerte.textContent = f.action.endsWith("/on") ? "ON" : "OFF";
     });
   });
