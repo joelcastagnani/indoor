@@ -2,6 +2,7 @@ import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
+import time
 
 from flask import Flask, redirect, url_for, send_from_directory, render_template, jsonify
 app = Flask(__name__)
@@ -120,38 +121,48 @@ def sen_off():
             sen.kill()
     return redirect(url_for("index"))
 
+
 def aplicar_reles():
     a = 1 if rele_prendido() else 0
     b = 1 if rele2_prendido() else 0
-    subprocess.run(
-        ["/home/rideparkcity1/proyectos/indoor/.venv/bin/mpremote", "connect", "/dev/ttyUSB0", "exec",
-         "import rele; rele.aplicar(%d, %d)" % (a, b)],
-        cwd=ROOT,
-        timeout=8,
-    )
+    pausa = ROOT / "datos" / "puerto.pedir"
+    pausa.write_text("1\n")
+    time.sleep(2)
+    for _ in range(25):
+        r = subprocess.run(["fuser", "/dev/ttyUSB0"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        if r.returncode != 0:
+            break
+        time.sleep(0.2)
+    try:
+        subprocess.run(
+            # hola
+            ["/home/rideparkcity1/proyectos/indoor/.venv/bin/mpremote", "connect", "/dev/ttyUSB0", "resume", "exec",
+             "import rele; rele.aplicar(%d, %d)" % (a, b)],
+            # hola
+            cwd=ROOT,
+            timeout=12,
+        )
+    finally:
+        pausa.unlink(missing_ok=True)
 
 @app.post("/rele/on")
 def rele_on():
     BANDERA_RELE.write_text("on\n")
-    aplicar_reles()
     return redirect(url_for("index"))
 
 @app.post("/rele/off")
 def rele_off():
     BANDERA_RELE.write_text("off\n")
-    aplicar_reles()
     return redirect(url_for("index"))
 
 @app.post("/rele2/on")
 def rele2_on():
     BANDERA_RELE2.write_text("on\n")
-    aplicar_reles()
     return redirect(url_for("index"))
 
 @app.post("/rele2/off")
 def rele2_off():
     BANDERA_RELE2.write_text("off\n")
-    aplicar_reles()
     return redirect(url_for("index"))
 
 
