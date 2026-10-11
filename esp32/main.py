@@ -18,8 +18,8 @@ def leer_orden():
     if not linea.startswith("R "):
         return
     partes = linea.split()
-    if len(partes) == 3:
-        rele.aplicar(int(partes[1]), int(partes[2]))
+    if len(partes) == 5:
+        rele.aplicar(int(partes[1]), int(partes[2]), int(partes[3]), int(partes[4]))
 
 while True:
     leer_orden()

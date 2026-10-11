@@ -13,6 +13,8 @@ LOG = ROOT / "datos" / "logs" / "sensor.csv"
 BANDERA = ROOT / "datos" / "grabar.txt"
 BANDERA_RELE = ROOT / "datos" / "rele.txt"
 BANDERA_RELE2 = ROOT / "datos" / "rele2.txt"
+BANDERA_RELE3 = ROOT / "datos" / "rele3.txt"
+BANDERA_RELE4 = ROOT / "datos" / "rele4.txt"
 sen = None
 
 
@@ -31,10 +33,24 @@ def rele_prendido():
         return False
     return BANDERA_RELE.read_text().strip().lower() == "on"
 
+
 def rele2_prendido():
     if not BANDERA_RELE2.exists():
         return False
     return BANDERA_RELE2.read_text().strip().lower() == "on"
+
+
+def rele3_prendido():
+    if not BANDERA_RELE3.exists():
+        return False
+    return BANDERA_RELE3.read_text().strip().lower() == "on"
+
+
+def rele4_prendido():
+    if not BANDERA_RELE4.exists():
+        return False
+    return BANDERA_RELE4.read_text().strip().lower() == "on"
+
 
 def parse_clima():
     if not LOG.exists():
@@ -54,6 +70,8 @@ def index():
     est_vid = "ON" if grabacion_on() else "OFF"
     est_rele = "ON" if rele_prendido() else "OFF"
     est_rele2 = "ON" if rele2_prendido() else "OFF"
+    est_rele3 = "ON" if rele3_prendido() else "OFF"
+    est_rele4 = "ON" if rele4_prendido() else "OFF"
     ahora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     clima = parse_clima()
     preview = FOTOS / "preview.jpg"
@@ -64,6 +82,8 @@ def index():
         est_vid=est_vid,
         est_rele=est_rele,
         est_rele2=est_rele2,
+        est_rele3=est_rele3,
+        est_rele4=est_rele4,
         ahora=ahora,
         clima=clima,
         preview_v=preview_v,
@@ -110,6 +130,7 @@ def sen_on():
         )
     return redirect(url_for("index"))
 
+
 @app.post("/sen/off")
 def sen_off():
     global sen
@@ -121,6 +142,8 @@ def sen_off():
 def aplicar_reles():
     a = 1 if rele_prendido() else 0
     b = 1 if rele2_prendido() else 0
+    c = 1 if rele3_prendido() else 0
+    d = 1 if rele4_prendido() else 0
     pausa = ROOT / "datos" / "puerto.pedir"
     pausa.write_text("1\n")
     time.sleep(2)
@@ -131,34 +154,68 @@ def aplicar_reles():
         time.sleep(0.2)
     try:
         subprocess.run(
-            # hola
             ["/home/rideparkcity1/proyectos/indoor/.venv/bin/mpremote", "connect", "/dev/ttyUSB0", "resume", "exec",
-             "import rele; rele.aplicar(%d, %d)" % (a, b)],
-            # hola
+             "import rele; rele.aplicar(%d, %d, %d, %d)" % (a, b, c, d)],
             cwd=ROOT,
             timeout=12,
         )
     finally:
         pausa.unlink(missing_ok=True)
 
+
 @app.post("/rele/on")
 def rele_on():
     BANDERA_RELE.write_text("on\n")
+    aplicar_reles()
     return redirect(url_for("index"))
+
 
 @app.post("/rele/off")
 def rele_off():
     BANDERA_RELE.write_text("off\n")
+    aplicar_reles()
     return redirect(url_for("index"))
+
 
 @app.post("/rele2/on")
 def rele2_on():
     BANDERA_RELE2.write_text("on\n")
+    aplicar_reles()
     return redirect(url_for("index"))
+
 
 @app.post("/rele2/off")
 def rele2_off():
     BANDERA_RELE2.write_text("off\n")
+    aplicar_reles()
+    return redirect(url_for("index"))
+
+
+@app.post("/rele3/on")
+def rele3_on():
+    BANDERA_RELE3.write_text("on\n")
+    aplicar_reles()
+    return redirect(url_for("index"))
+
+
+@app.post("/rele3/off")
+def rele3_off():
+    BANDERA_RELE3.write_text("off\n")
+    aplicar_reles()
+    return redirect(url_for("index"))
+
+
+@app.post("/rele4/on")
+def rele4_on():
+    BANDERA_RELE4.write_text("on\n")
+    aplicar_reles()
+    return redirect(url_for("index"))
+
+
+@app.post("/rele4/off")
+def rele4_off():
+    BANDERA_RELE4.write_text("off\n")
+    aplicar_reles()
     return redirect(url_for("index"))
 
 
