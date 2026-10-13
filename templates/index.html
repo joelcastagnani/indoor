@@ -38,18 +38,22 @@
   setInterval(refrescar, 3000);
 </script>
 
+<script>
+  async function actualizarReles() {
+    try {
+      const r = await fetch("/estado");
+      const d = await r.json();
+      document.getElementById("est-rele1").textContent = d.rele1;
+      document.getElementById("est-rele2").textContent = d.rele2;
+      document.getElementById("est-rele3").textContent = d.rele3;
+      document.getElementById("est-rele4").textContent = d.rele4;
+    } catch (e) { }
+  }
+  setInterval(actualizarReles, 1000);
+</script>
+
 <body>
   <h1 class="tit">Indoor</h1>
-
-  <button type="button" id="fs">Pantalla completa</button>
-
-  <script>
-    document.getElementById("fs").onclick = function () {
-      var foto = document.getElementById("preview");
-      if (!foto) return;
-      foto.requestFullscreen();
-    };
-  </script>
 
   <div class="half1">
     <section>
@@ -65,6 +69,23 @@
         <p>Humedad: —</p>
         {% endif %}
     </section>
+
+    <button type="button" id="fs">Pantalla completa</button>
+    <script>
+      document.getElementById("fs").onclick = function () {
+        var foto = document.getElementById("preview");
+        var target = foto || document.documentElement;
+        var rfs = target.requestFullscreen || target.webkitRequestFullscreen || target.mozRequestFullScreen || target.msRequestFullscreen;
+        if (rfs) {
+          rfs.call(target).catch(function (err) {
+            console.log("Fullscreen error:", err);
+            alert("No se pudo: " + err.message);
+          });
+        } else {
+          alert("Fullscreen no soportado");
+        }
+      };
+    </script>
 
     <section class="box">
       {% if preview_v %}
@@ -106,7 +127,7 @@
 
     <section class="onoff relebox">
       <div class="rele">
-        <p>Relé: canal 1 — <strong>{{ est_rele }}</strong></p>
+        <p>Relé: canal 1 — <strong id="est-rele1">{{ est_rele }}</strong></p>
         <div class="switchesrele">
           <form method="post" action="/rele/on">
             {{ reward_button(text="ON", type="submit", mask_id="mask-rele-on") }}
@@ -118,7 +139,7 @@
       </div>
 
       <div class="rele">
-        <p>Relé: canal 2 — <strong>{{ est_rele2 }}</strong></p>
+        <p>Relé: canal 2 — <strong id="est-rele2">{{ est_rele2 }}</strong></p>
 
         <div class="switchesrele">
           <form method="post" action="/rele2/on">
@@ -131,7 +152,7 @@
       </div>
 
       <div class="rele">
-        <p>Relé: canal 3 — <strong>{{ est_rele3 }}</strong></p>
+        <p>Relé: canal 3 — <strong id="est-rele3">{{ est_rele3 }}</strong></p>
 
         <div class="switchesrele">
           <form method="post" action="/rele3/on">
@@ -144,7 +165,7 @@
       </div>
 
       <div class="rele">
-        <p>Relé: canal 4 — <strong>{{ est_rele4 }}</strong></p>
+        <p>Relé: canal 4 — <strong id="est-rele4">{{ est_rele4 }}</strong></p>
 
         <div class="switchesrele">
           <form method="post" action="/rele4/on">

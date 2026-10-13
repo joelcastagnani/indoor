@@ -19,7 +19,15 @@ def orden():
     return f"R {bit(rele1)} {bit(rele2)}\n"
 
 def medicion(linea):
-    return "," in linea and "rst:" not in linea and not linea.startswith("R ")
+    partes = linea.split(",")
+    if len(partes) != 2:
+        return False
+    try:
+        float(partes[0].strip())
+        float(partes[1].strip())
+        return True
+    except ValueError:
+        return False
 
 def sin_corte(ser):
     attrs = termios.tcgetattr(ser.fileno())

@@ -3,6 +3,7 @@ import sys
 from datetime import datetime
 from pathlib import Path
 import time
+import threading
 
 from flask import Flask, redirect, url_for, send_from_directory, render_template, jsonify
 app = Flask(__name__)
@@ -100,11 +101,15 @@ def estado():
     clima = parse_clima()
     preview = FOTOS / "preview.jpg"
     return jsonify(
-        ahora=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        temp=clima["temp"] if clima else None,
-        hum=clima["hum"] if clima else None,
-        preview_v=int(preview.stat().st_mtime) if preview.exists() else None,
-    )
+    ahora=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    temp=clima["temp"] if clima else None,
+    hum=clima["hum"] if clima else None,
+    preview_v=int(preview.stat().st_mtime) if preview.exists() else None,
+    rele1="ON" if rele_prendido() else "OFF",
+    rele2="ON" if rele2_prendido() else "OFF",
+    rele3="ON" if rele3_prendido() else "OFF",
+    rele4="ON" if rele4_prendido() else "OFF",
+)
 
 
 @app.post("/vid/on")
@@ -146,12 +151,12 @@ def aplicar_reles():
     d = 1 if rele4_prendido() else 0
     pausa = ROOT / "datos" / "puerto.pedir"
     pausa.write_text("1\n")
-    time.sleep(2)
+    time.sleep(4)
     for _ in range(25):
         r = subprocess.run(["fuser", "/dev/ttyUSB0"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         if r.returncode != 0:
             break
-        time.sleep(0.2)
+        time.sleep(1)
     try:
         subprocess.run(
             ["/home/rideparkcity1/proyectos/indoor/.venv/bin/mpremote", "connect", "/dev/ttyUSB0", "resume", "exec",
@@ -162,6 +167,29 @@ def aplicar_reles():
     finally:
         pausa.unlink(missing_ok=True)
 
+def auto_humedad():
+    if not LOG.exists():
+        return
+    ultima = LOG.read_text().strip().splitlines()[-1]
+    try:
+        partes = ultima.split(",")
+        temp = float(partes[1].strip())
+        humedad = float(partes[2].strip())
+    except Exception:
+        return
+    # K1 no se toca (siempre manual)
+    k2 = "on" if humedad >= 65 else "off"
+    k3 = "on" if humedad >= 75 else "off"
+    k4 = "on" if temp >= 24 else "off"
+    actual2 = BANDERA_RELE2.read_text().strip() if BANDERA_RELE2.exists() else "off"
+    actual3 = BANDERA_RELE3.read_text().strip() if BANDERA_RELE3.exists() else "off"
+    actual4 = BANDERA_RELE4.read_text().strip() if BANDERA_RELE4.exists() else "off"
+    if (actual2, actual3, actual4) == (k2, k3, k4):
+        return
+    BANDERA_RELE2.write_text(k2 + "\n")
+    BANDERA_RELE3.write_text(k3 + "\n")
+    BANDERA_RELE4.write_text(k4 + "\n")
+    aplicar_reles()
 
 @app.post("/rele/on")
 def rele_on():
@@ -218,8 +246,24 @@ def rele4_off():
     aplicar_reles()
     return redirect(url_for("index"))
 
+def loop_auto():
+    while True:
+        time.sleep(10)
+        try:
+            auto_humedad()
+        except Exception:
+            pass
+threading.Thread(target=loop_auto, daemon=True).start()
 
 if __name__ == "__main__":
     app.config["TEMPLATES_AUTO_RELOAD"] = True
     app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0
+    def loop_auto():
+        while True:
+            time.sleep(10)
+            try:
+                auto_humedad()
+            except Exception:
+                pass
+    threading.Thread(target=loop_auto, daemon=True).start()
     app.run(host="0.0.0.0", port=5000, debug=False)
