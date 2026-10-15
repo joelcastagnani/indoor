@@ -4,7 +4,6 @@ import termios
 import time
 import serial
 
-puerto = "/dev/ttyUSB0"
 salida = Path("datos/logs/sensor.csv")
 pausa = Path("datos/puerto.pedir")
 rele1 = Path("datos/rele.txt")
@@ -36,10 +35,17 @@ def sin_corte(ser):
     ser.dtr = False
     ser.rts = False
 
+def puerto_esp32():
+    for p in Path("/dev").glob("ttyUSB*"):
+        if p.exists():
+            return str(p)
+    return None
+
 print("logueando. Ctrl+C para salir.")
 ser = None
 ultima = None
 ultima_fila = None
+
 while True:
     if pausa.exists():
         if ser is not None:
@@ -47,31 +53,60 @@ while True:
             ser = None
         time.sleep(0.2)
         continue
+
     if ser is None:
-        ser = serial.Serial()
-        ser.port = puerto
-        ser.baudrate = 115200
-        ser.timeout = 0.2
-        ser.dtr = False
-        ser.rts = False
-        ser.open()
-        sin_corte(ser)
-        time.sleep(2)
-        ser.reset_input_buffer()
-        ser.timeout = 3
-        ultima = None
-    ahora_orden = orden()
-    if ahora_orden != ultima:
-        ser.write(ahora_orden.encode())
-        ultima = ahora_orden
-    linea = ser.readline().decode("utf-8", errors="ignore").strip()
-    if not medicion(linea):
-        continue
-    ahora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    fila = f"{ahora},{linea}"
-    if fila == ultima_fila:
-        continue
-    ultima_fila = fila
-    print(fila)
-    with salida.open("a") as f:
-        f.write(fila + "\n")
+        puerto = puerto_esp32()
+        if not puerto:
+            print("esperando ESP32...", datetime.now().strftime("%H:%M:%S"))
+            time.sleep(5)
+            continue
+        try:
+            ser = serial.Serial()
+            ser.port = puerto
+            ser.baudrate = 115200
+            ser.timeout = 0.2
+            ser.dsrdtr = False
+            ser.rtscts = False
+            ser.dtr = False
+            ser.rts = False
+            ser.open()
+            time.sleep(0.1)
+            ser.dtr = False
+            ser.rts = False
+            sin_corte(ser)
+            time.sleep(3)
+            ser.reset_input_buffer()
+            ser.timeout = 3
+            ultima = None
+            print("conectado a", puerto)
+        except Exception as e:
+            print("no pude abrir", puerto, e)
+            ser = None
+            time.sleep(5)
+            continue
+
+    try:
+        ahora_orden = orden()
+        if ahora_orden != ultima:
+            ser.write(ahora_orden.encode())
+            ultima = ahora_orden
+        linea = ser.readline().decode("utf-8", errors="ignore").strip()
+        if not medicion(linea):
+            continue
+        ahora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        fila = f"{ahora},{linea}"
+        if fila == ultima_fila:
+            continue
+        ultima_fila = fila
+        print(fila)
+        with salida.open("a") as f:
+            f.write(fila + "\n")
+    except Exception as e:
+        print("error sensor:", e)
+        if ser is not None:
+            try:
+                ser.close()
+            except Exception:
+                pass
+            ser = None
+        time.sleep(3)
