@@ -37,9 +37,9 @@ def grabar_activado():
 def fijar_exposicion(dispositivo):
     subprocess.run(
         ["v4l2-ctl", "-d", dispositivo,
+         "--set-ctrl=auto_exposure=1",
          "--set-ctrl=exposure_time_absolute=" + str(config.EXPOSURE_TIME),
-         "--set-ctrl=gain=" + str(config.GAIN),
-         "--set-ctrl=gain=0"],
+         "--set-ctrl=gain=" + str(config.GAIN)],
         check=False,
     )
 
