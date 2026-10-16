@@ -283,10 +283,10 @@ if __name__ == "__main__":
     app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0
     def loop_auto():
         while True:
-            time.sleep(10)
             try:
                 auto_humedad()
-            except Exception:
-                pass
+            except Exception as e:
+                print(f"ERROR en auto_humedad: {e}")
+            time.sleep(10)
     threading.Thread(target=loop_auto, daemon=True).start()
     app.run(host="0.0.0.0", port=5000, debug=False)
