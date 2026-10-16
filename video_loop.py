@@ -2,6 +2,7 @@ import subprocess
 from datetime import datetime
 from pathlib import Path
 from time import sleep
+import config
 
 preview = Path("datos/fotos/preview.jpg")
 carpeta = Path("datos/video")
@@ -26,7 +27,7 @@ def camara_c920():
 def en_luz(ahora=None):
     ahora = ahora or datetime.now()
     h = ahora.hour
-    return h >= 18 or h < 12
+    return h >= config.HORA_LUZ_INICIO or h < config.HORA_LUZ_FIN
 
 def grabar_activado():
     if not bandera.exists():
@@ -36,8 +37,8 @@ def grabar_activado():
 def fijar_exposicion(dispositivo):
     subprocess.run(
         ["v4l2-ctl", "-d", dispositivo,
-         "--set-ctrl=auto_exposure=1",
-         "--set-ctrl=exposure_time_absolute=10",
+         "--set-ctrl=exposure_time_absolute=" + str(config.EXPOSURE_TIME),
+         "--set-ctrl=gain=" + str(config.GAIN),
          "--set-ctrl=gain=0"],
         check=False,
     )
