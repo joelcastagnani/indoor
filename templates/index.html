@@ -55,6 +55,10 @@
 <body>
   <h1 class="tit">Indoor</h1>
 
+  <p>Auto: <strong>{{ "ON" if auto_activa() else "OFF" }}</strong></p>
+  <form method="post" action="/auto/on">{{ reward_button(text="Auto ON", type="submit") }}</form>
+  <form method="post" action="/auto/off">{{ reward_button(text="Auto OFF", type="submit") }}</form>
+
   <div class="half1">
     <section>
       <div class="info box">

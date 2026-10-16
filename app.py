@@ -17,8 +17,13 @@ BANDERA_RELE = ROOT / "datos" / "rele.txt"
 BANDERA_RELE2 = ROOT / "datos" / "rele2.txt"
 BANDERA_RELE3 = ROOT / "datos" / "rele3.txt"
 BANDERA_RELE4 = ROOT / "datos" / "rele4.txt"
+BANDERA_AUTO = ROOT / "datos" / "auto.txt"
 sen = None
 
+def auto_activa():
+    if not BANDERA_AUTO.exists():
+        return True
+    return BANDERA_AUTO.read_text().strip().lower() != "off"
 
 def vivo(p):
     return p is not None and p.poll() is None
@@ -139,6 +144,15 @@ def sen_on():
         )
     return redirect(url_for("index"))
 
+@app.post("/auto/on")
+def auto_on():
+    BANDERA_AUTO.write_text("on\n")
+    return redirect(url_for("index"))
+
+@app.post("/auto/off")
+def auto_off():
+    BANDERA_AUTO.write_text("off\n")
+    return redirect(url_for("index"))
 
 @app.post("/sen/off")
 def sen_off():
@@ -153,25 +167,11 @@ def aplicar_reles():
     b = 1 if rele2_prendido() else 0
     c = 1 if rele3_prendido() else 0
     d = 1 if rele4_prendido() else 0
-    pausa = ROOT / "datos" / "puerto.pedir"
-    pausa.write_text("1\n")
-    time.sleep(4)
-    for _ in range(25):
-        r = subprocess.run(["fuser", "/dev/ttyUSB0"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        if r.returncode != 0:
-            break
-        time.sleep(1)
-    try:
-        subprocess.run(
-            ["/home/rideparkcity1/proyectos/indoor/.venv/bin/mpremote", "connect", "/dev/ttyUSB0", "resume", "exec",
-             "import rele; rele.aplicar(%d, %d, %d, %d)" % (a, b, c, d)],
-            cwd=ROOT,
-            timeout=12,
-        )
-    finally:
-        pausa.unlink(missing_ok=True)
+    Path("/tmp/rele_cmd").write_text(f"R {a} {b} {c} {d}\n")
 
 def auto_humedad():
+    if not auto_activa():
+        return
     clima = parse_clima()
     if not clima:
         return
