@@ -85,6 +85,7 @@ def index():
     preview_v = int(preview.stat().st_mtime) if preview.exists() else None
     return render_template(
         "index.html",
+        est_auto="ON" if auto_activa() else "OFF",
         est_sen=est_sen,
         est_vid=est_vid,
         est_rele=est_rele,
