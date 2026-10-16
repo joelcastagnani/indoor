@@ -119,6 +119,7 @@ def estado():
     rele2="ON" if rele2_prendido() else "OFF",
     rele3="ON" if rele3_prendido() else "OFF",
     rele4="ON" if rele4_prendido() else "OFF",
+    auto="ON" if auto_activa() else "OFF",
 )
 
 
