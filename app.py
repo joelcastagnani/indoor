@@ -178,23 +178,34 @@ def auto_humedad():
     except:
         return
 
+    cambio = False
+
     # K2
     if h >= config.HUMEDAD_K2 and not rele2_prendido():
-        aplicar_reles(2, True)
+        BANDERA_RELE2.write_text("on\n")
+        cambio = True
     elif h < config.HUMEDAD_K2 and rele2_prendido():
-        aplicar_reles(2, False)
+        BANDERA_RELE2.write_text("off\n")
+        cambio = True
 
     # K3
     if h >= config.HUMEDAD_K3 and not rele3_prendido():
-        aplicar_reles(3, True)
+        BANDERA_RELE3.write_text("on\n")
+        cambio = True
     elif h < config.HUMEDAD_K3 and rele3_prendido():
-        aplicar_reles(3, False)
+        BANDERA_RELE3.write_text("off\n")
+        cambio = True
 
     # K4
     if t >= config.TEMP_K4 and not rele4_prendido():
-        aplicar_reles(4, True)
+        BANDERA_RELE4.write_text("on\n")
+        cambio = True
     elif t < config.TEMP_K4 and rele4_prendido():
-        aplicar_reles(4, False)
+        BANDERA_RELE4.write_text("off\n")
+        cambio = True
+
+    if cambio:
+        aplicar_reles()
 
 @app.post("/rele/on")
 def rele_on():
