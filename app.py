@@ -181,27 +181,34 @@ def auto_humedad():
     cambio = False
 
     # K2
+        # K2
     if h >= config.HUMEDAD_K2 and not rele2_prendido():
         BANDERA_RELE2.write_text("on\n")
+        print(f"AUTO K2 ON  hum={h:.1f} >= {config.HUMEDAD_K2}")
         cambio = True
     elif h < config.HUMEDAD_K2 and rele2_prendido():
         BANDERA_RELE2.write_text("off\n")
+        print(f"AUTO K2 OFF hum={h:.1f} < {config.HUMEDAD_K2}")
         cambio = True
 
     # K3
     if h >= config.HUMEDAD_K3 and not rele3_prendido():
         BANDERA_RELE3.write_text("on\n")
+        print(f"AUTO K3 ON  hum={h:.1f} >= {config.HUMEDAD_K3}")    
         cambio = True
     elif h < config.HUMEDAD_K3 and rele3_prendido():
         BANDERA_RELE3.write_text("off\n")
+        print(f"AUTO K3 OFF hum={h:.1f} < {config.HUMEDAD_K3}")
         cambio = True
 
     # K4
     if t >= config.TEMP_K4 and not rele4_prendido():
         BANDERA_RELE4.write_text("on\n")
+        print(f"AUTO K4 ON  temp={t:.1f} >= {config.TEMP_K4}")
         cambio = True
     elif t < config.TEMP_K4 and rele4_prendido():
         BANDERA_RELE4.write_text("off\n")
+        print(f"AUTO K4 OFF temp={t:.1f} < {config.TEMP_K4}")
         cambio = True
 
     if cambio:
