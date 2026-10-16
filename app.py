@@ -149,23 +149,8 @@ def aplicar_reles():
     b = 1 if rele2_prendido() else 0
     c = 1 if rele3_prendido() else 0
     d = 1 if rele4_prendido() else 0
-    pausa = ROOT / "datos" / "puerto.pedir"
-    pausa.write_text("1\n")
-    time.sleep(4)
-    for _ in range(25):
-        r = subprocess.run(["fuser", "/dev/ttyUSB0"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        if r.returncode != 0:
-            break
-        time.sleep(1)
-    try:
-        subprocess.run(
-            ["/home/rideparkcity1/proyectos/indoor/.venv/bin/mpremote", "connect", "/dev/ttyUSB0", "resume", "exec",
-             "import rele; rele.aplicar(%d, %d, %d, %d)" % (a, b, c, d)],
-            cwd=ROOT,
-            timeout=12,
-        )
-    finally:
-        pausa.unlink(missing_ok=True)
+    with open("/tmp/rele_cmd", "w") as f:
+        f.write(f"R 1 {a}\nR 2 {b}\nR 3 {c}\nR 4 {d}\n")
 
 def auto_humedad():
     if not LOG.exists():
@@ -191,59 +176,52 @@ def auto_humedad():
     BANDERA_RELE4.write_text(k4 + "\n")
     aplicar_reles()
 
-@app.post("/rele/on")
-def rele_on():
-    BANDERA_RELE.write_text("on\n")
-    aplicar_reles()
+@app.post("/rele/1/on")
+def rele1_on():
+    with open("/tmp/rele_cmd", "w") as f:
+        f.write("R 1 1\n")
     return redirect(url_for("index"))
 
-
-@app.post("/rele/off")
-def rele_off():
-    BANDERA_RELE.write_text("off\n")
-    aplicar_reles()
+@app.post("/rele/1/off")
+def rele1_off():
+    with open("/tmp/rele_cmd", "w") as f:
+        f.write("R 1 0\n")
     return redirect(url_for("index"))
 
-
-@app.post("/rele2/on")
+@app.post("/rele/2/on")
 def rele2_on():
-    BANDERA_RELE2.write_text("on\n")
-    aplicar_reles()
+    with open("/tmp/rele_cmd", "w") as f:
+        f.write("R 2 1\n")
     return redirect(url_for("index"))
 
-
-@app.post("/rele2/off")
+@app.post("/rele/2/off")
 def rele2_off():
-    BANDERA_RELE2.write_text("off\n")
-    aplicar_reles()
+    with open("/tmp/rele_cmd", "w") as f:
+        f.write("R 2 0\n")
     return redirect(url_for("index"))
 
-
-@app.post("/rele3/on")
+@app.post("/rele/3/on")
 def rele3_on():
-    BANDERA_RELE3.write_text("on\n")
-    aplicar_reles()
+    with open("/tmp/rele_cmd", "w") as f:
+        f.write("R 3 1\n")
     return redirect(url_for("index"))
 
-
-@app.post("/rele3/off")
+@app.post("/rele/3/off")
 def rele3_off():
-    BANDERA_RELE3.write_text("off\n")
-    aplicar_reles()
+    with open("/tmp/rele_cmd", "w") as f:
+        f.write("R 3 0\n")
     return redirect(url_for("index"))
 
-
-@app.post("/rele4/on")
+@app.post("/rele/4/on")
 def rele4_on():
-    BANDERA_RELE4.write_text("on\n")
-    aplicar_reles()
+    with open("/tmp/rele_cmd", "w") as f:
+        f.write("R 4 1\n")
     return redirect(url_for("index"))
 
-
-@app.post("/rele4/off")
+@app.post("/rele/4/off")
 def rele4_off():
-    BANDERA_RELE4.write_text("off\n")
-    aplicar_reles()
+    with open("/tmp/rele_cmd", "w") as f:
+        f.write("R 4 0\n")
     return redirect(url_for("index"))
 
 def loop_auto():

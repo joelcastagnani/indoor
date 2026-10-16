@@ -44,9 +44,15 @@ def fijar_exposicion(dispositivo):
 
 print("preview 24h; mp4 si grabar=on y 18:00-12:00. Ctrl+C para salir.")
 while True:
-    dispositivo = camara_c920()
+    try:
+        dispositivo = camara_c920()
+    except Exception:
+        print("esperando C920...", datetime.now().strftime("%H:%M:%S"))
+        sleep(5)
+        continue
+
     if en_luz() and grabar_activado():
-        print("GRABANDO 10 min + preview", datetime.now().strftime("%H:%M:%S"), dispositivo)
+        print("GRABANDO 1 h + preview", datetime.now().strftime("%H:%M:%S"), dispositivo)
         nombre = datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + ".mp4"
         comando = [
             "ffmpeg", "-y", "-hide_banner", "-loglevel", "error",
@@ -69,6 +75,9 @@ while True:
             "-t", "60",
             "-vf", "fps=1", "-update", "1", str(preview),
         ]
-    fijar_exposicion(dispositivo)
-    subprocess.run(comando)
+    try:
+        fijar_exposicion(dispositivo)
+        subprocess.run(comando, timeout=3700)
+    except Exception as e:
+        print("error video:", e)
     sleep(2)
