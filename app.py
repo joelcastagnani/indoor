@@ -269,15 +269,6 @@ def rele4_off():
     aplicar_reles()
     return redirect(url_for("index"))
 
-def loop_auto():
-    while True:
-        time.sleep(10)
-        try:
-            auto_humedad()
-        except Exception:
-            pass
-threading.Thread(target=loop_auto, daemon=True).start()
-
 if __name__ == "__main__":
     app.config["TEMPLATES_AUTO_RELOAD"] = True
     app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0
