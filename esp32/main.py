@@ -31,6 +31,6 @@ while True:
     h = raw_h * 100 / 1048576
     t = raw_t * 200 / 1048576 - 50
     print(round(t, 2), ",", round(h, 1))
-    for _ in range(20):
+    for _ in range(6):
         leer_orden()
         sleep_ms(500)
