@@ -4,6 +4,7 @@ from datetime import datetime
 from pathlib import Path
 import time
 import threading
+import config
 
 from flask import Flask, redirect, url_for, send_from_directory, render_template, jsonify
 app = Flask(__name__)
@@ -168,28 +169,32 @@ def aplicar_reles():
         pausa.unlink(missing_ok=True)
 
 def auto_humedad():
-    if not LOG.exists():
+    clima = parse_clima()
+    if not clima:
         return
-    ultima = LOG.read_text().strip().splitlines()[-1]
     try:
-        partes = ultima.split(",")
-        temp = float(partes[1].strip())
-        humedad = float(partes[2].strip())
-    except Exception:
+        h = float(clima["hum"])
+        t = float(clima["temp"])
+    except:
         return
-    # K1 no se toca (siempre manual)
-    k2 = "on" if humedad >= 65 else "off"
-    k3 = "on" if humedad >= 75 else "off"
-    k4 = "on" if temp >= 24 else "off"
-    actual2 = BANDERA_RELE2.read_text().strip() if BANDERA_RELE2.exists() else "off"
-    actual3 = BANDERA_RELE3.read_text().strip() if BANDERA_RELE3.exists() else "off"
-    actual4 = BANDERA_RELE4.read_text().strip() if BANDERA_RELE4.exists() else "off"
-    if (actual2, actual3, actual4) == (k2, k3, k4):
-        return
-    BANDERA_RELE2.write_text(k2 + "\n")
-    BANDERA_RELE3.write_text(k3 + "\n")
-    BANDERA_RELE4.write_text(k4 + "\n")
-    aplicar_reles()
+
+    # K2
+    if h >= config.HUMEDAD_K2 and not rele2_prendido():
+        aplicar_reles(2, True)
+    elif h < config.HUMEDAD_K2 and rele2_prendido():
+        aplicar_reles(2, False)
+
+    # K3
+    if h >= config.HUMEDAD_K3 and not rele3_prendido():
+        aplicar_reles(3, True)
+    elif h < config.HUMEDAD_K3 and rele3_prendido():
+        aplicar_reles(3, False)
+
+    # K4
+    if t >= config.TEMP_K4 and not rele4_prendido():
+        aplicar_reles(4, True)
+    elif t < config.TEMP_K4 and rele4_prendido():
+        aplicar_reles(4, False)
 
 @app.post("/rele/on")
 def rele_on():
