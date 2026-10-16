@@ -92,7 +92,6 @@ def index():
         umbral_k2=config.HUMEDAD_K2,
         umbral_k3=config.HUMEDAD_K3,
         umbral_k4=config.TEMP_K4,
-        
     )
 
 
