@@ -181,6 +181,10 @@ img {
   margin-top: 4px;
 }
 
+.auto{
+  color: var(--titulos);
+}
+
 /* From Uiverse.io by vinodjangid07 */
 
 @media (max-width: 768px) {

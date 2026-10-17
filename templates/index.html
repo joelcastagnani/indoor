@@ -57,7 +57,7 @@
 <body>
   <h1 class="tit">Indoor</h1>
 
-  <p>Auto: <strong id="auto-estado">{{ est_auto }}</strong></p>
+  <p class="auto">Auto: <strong id="auto-estado">{{ est_auto }}</strong></p>
   <form method="post" action="/auto/on">{{ reward_button(text="Auto ON", type="submit") }}</form>
   <form method="post" action="/auto/off">{{ reward_button(text="Auto OFF", type="submit") }}</form>
 
