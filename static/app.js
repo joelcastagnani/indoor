@@ -45,8 +45,8 @@ document.querySelectorAll(".switch-input").forEach(function (sw) {
         await fetch(url, { method: "POST" });
 
         // Actualiza el texto ON/OFF que está al lado
-        const section = sw.closest("section");
-        const fuerte = section && section.querySelector("strong");
+        const container = sw.closest(".rele") || sw.closest("section");
+        const fuerte = container && container.querySelector("strong");
         if (fuerte) {
             fuerte.textContent = sw.checked ? "ON" : "OFF";
         }
