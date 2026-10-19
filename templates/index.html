@@ -10,47 +10,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
-<script>
-  async function refrescar() {
-    const r = await fetch("/estado");
-    const d = await r.json();
-    const ahora = document.getElementById("ahora");
-    if (ahora && d.ahora) ahora.textContent = d.ahora;
-    const temp = document.getElementById("temp");
-    if (temp && d.temp != null) temp.textContent = d.temp + " °C";
-    const tempDif = document.getElementById("temp-dif");
-    const deseada = 24;
-    if (tempDif && d.temp != null) {
-      const dif = d.temp - deseada;
-      const signo = dif > 0 ? "+" : "";
-      tempDif.textContent = " (" + signo + dif.toFixed(1) + " °C)";
-      if (dif > 10) tempDif.style.color = "#c0392b";
-      else if (dif < -10) tempDif.style.color = "#b8860b";
-      else tempDif.style.color = "#1e7f4f";
-    }
-    const hum = document.getElementById("hum");
-    if (hum && d.hum != null) hum.textContent = d.hum + " %";
-    const img = document.getElementById("preview");
-    if (img && d.preview_v && !img.src.endsWith("v=" + d.preview_v)) {
-      img.src = "/foto/preview.jpg?v=" + d.preview_v;
-    }
-  }
-  setInterval(refrescar, 3000);
-</script>
-
-<script>
-  async function actualizarReles() {
-    try {
-      const r = await fetch("/estado");
-      const d = await r.json();
-      document.getElementById("est-rele1").textContent = d.rele1;
-      document.getElementById("est-rele2").textContent = d.rele2;
-      document.getElementById("est-rele3").textContent = d.rele3;
-      document.getElementById("est-rele4").textContent = d.rele4;
-    } catch (e) { }
-  }
-  setInterval(actualizarReles, 1000);
-</script>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
 
 <body>
   <h1 class="tit">Indoor</h1>
@@ -99,7 +59,7 @@
   </div>
 
   <div class="half2">
-    <section class="onoff box actions">
+    <!-- <section class="onoff box actions">
       <p>Grabación: <strong>{{ est_vid }}</strong></p>
       <div class="switches">
         <form method="post" action="/vid/on">
@@ -109,6 +69,18 @@
           {{ reward_button(text="OFF", type="submit", mask_id="mask-vid-off") }}
         </form>
       </div>
+    </section> -->
+    <section class="onoff box actions">
+      <p>Grabación: <strong id="est-vid">{{ est_vid }}</strong></p>
+      <input class="switch-input" id="sw-vid" type="checkbox" data-on="/vid/on" data-off="/vid/off" {% if est_vid=="ON"
+        %}checked{% endif %}>
+      <label class="switch" for="sw-vid">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="slider">
+          <path
+            d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V256c0 17.7 14.3 32 32 32s32-14.3 32-32V32zM143.5 120.6c13.6-11.3 15.4-31.5 4.1-45.1s-31.5-15.4-45.1-4.1C49.7 115.4 16 181.8 16 256c0 132.5 107.5 240 240 240s240-107.5 240-240c0-74.2-33.8-140.6-86.6-184.6c-13.6-11.3-33.8-9.4-45.1 4.1s-9.4 33.8 4.1 45.1c38.9 32.3 63.5 81 63.5 135.4c0 97.2-78.8 176-176 176s-176-78.8-176-176c0-54.4 24.7-103.1 63.5-135.4z">
+          </path>
+        </svg>
+      </label>
     </section>
 
     <section class="onoff box actions">
@@ -180,23 +152,7 @@
   </div>
 </body>
 
-<script>
-  document.querySelectorAll("form").forEach(function (f) {
-    f.addEventListener("submit", async function (ev) {
-      ev.preventDefault();
-      await fetch(f.action, { method: "POST" });
-      var nodo = f;
-      var fuerte = null;
-      while (nodo && nodo !== document.body) {
-        fuerte = nodo.querySelector("strong");
-        if (fuerte) break;
-        nodo = nodo.parentElement;
-      }
-      if (!fuerte) return;
-      fuerte.textContent = f.action.endsWith("/on") ? "ON" : "OFF";
-    });
-  });
-</script>
+
 
 
 </html>

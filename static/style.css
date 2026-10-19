@@ -111,78 +111,47 @@ img {
   height: 105px;
 }
 
-/* From Uiverse.io by vinodjangid07 */
-.reward-btn {
-  width: 120px;
-  height: 40px;
-  background-color: #51625C;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s;
-  margin: 10px;
+/* Switch power estilo Uiverse - vinodjangid07 */
+.switch-input {
+  display: none;
 }
-
-.IconContainer {
-  width: 40px;
-  height: 40px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+.switch {
   position: relative;
-}
-
-.IconContainer svg {
-  width: 40%;
-  z-index: 3;
-}
-
-.box-top {
-  transition: all 0.3s;
-}
-
-.text {
-  color: #D8D2C6;
   width: 70px;
-  height: 100%;
-  font-size: 13px;
-  color: #6a8ef6;
+  height: 70px;
+  background-color: rgb(99, 99, 99);
+  border-radius: 50%;
+  z-index: 1;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 600;
+  border: 2px solid rgb(126, 126, 126);
+  box-shadow: 0px 0px 3px rgb(2, 2, 2) inset;
+  margin: 8px auto;
 }
-
-.reward-btn:hover .IconContainer .box-top {
-  transform: translateY(-5px);
+.switch svg {
+  width: 1.2em;
 }
-
-.reward-btn:hover {
-  background-color: #202531;
+.switch svg path {
+  fill: rgb(48, 48, 48);
 }
-
-.reward-btn:hover .coin {
-  transform: translateY(-5px);
-  transition-delay: 0.2s;
+.switch-input:checked + .switch {
+  box-shadow: 0px 0px 1px rgb(151, 243, 255) inset,
+    0px 0px 2px rgb(151, 243, 255) inset, 0px 0px 10px rgb(151, 243, 255) inset,
+    0px 0px 40px rgb(151, 243, 255), 0px 0px 100px rgb(151, 243, 255),
+    0px 0px 5px rgb(151, 243, 255);
+  border: 2px solid rgb(255, 255, 255);
+  background-color: rgb(146, 180, 184);
 }
-
-.coin {
-  width: 25%;
-  height: 25%;
-  background-color: #0B161E;
-  position: absolute;
-  border-radius: 50%;
-  transition: all 0.3s;
-  z-index: 1;
-  border: 2px solid #A6B9BE;
-  margin-top: 4px;
+.switch-input:checked + .switch svg {
+  filter: drop-shadow(0px 0px 5px rgb(151, 243, 255));
 }
+.switch-input:checked + .switch svg path {
+  fill: rgb(255, 255, 255);
+}
+/* Switch power estilo Uiverse - vinodjangid07 */
 
-/* From Uiverse.io by vinodjangid07 */
 
 @media (max-width: 768px) {
 
@@ -217,11 +186,9 @@ img {
   background-color: #7d2ae8;
   transition: all 0.2s ease;
 }
-
 .button:active {
   transform: scale(0.96);
 }
-
 .button:before,
 .button:after {
   position: absolute;
@@ -233,7 +200,6 @@ img {
   z-index: -1000;
   background-repeat: no-repeat;
 }
-
 .button:hover:before {
   top: -70%;
   background-image: radial-gradient(circle, #7d2ae8 20%, transparent 20%),
@@ -250,7 +216,6 @@ img {
   background-position: 50% 120%;
   animation: greentopBubbles 0.6s ease;
 }
-
 @keyframes greentopBubbles {
   0% {
     background-position: 5% 90%, 10% 90%, 10% 90%, 15% 90%, 25% 90%, 25% 90%,
@@ -268,7 +233,6 @@ img {
     background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
   }
 }
-
 .button:hover::after {
   bottom: -70%;
   background-image: radial-gradient(circle, #7d2ae8 20%, transparent 20%),
@@ -282,7 +246,6 @@ img {
   background-position: 50% 0%;
   animation: greenbottomBubbles 0.6s ease;
 }
-
 @keyframes greenbottomBubbles {
   0% {
     background-position: 10% -10%, 30% 10%, 55% -10%, 70% -10%, 85% -10%,
