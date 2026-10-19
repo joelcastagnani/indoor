@@ -52,6 +52,7 @@ def leer():
     raw_t = ((d[3] & 0x0F) << 16) | (d[4] << 8) | d[5]
     h = raw_h * 100 / 1048576
     t = raw_t * 200 / 1048576 - 50
+<<<<<<< HEAD
     return round(t, 2), round(h, 1)
 
 while True:
@@ -61,3 +62,9 @@ while True:
     except:
         pass
     sleep(2)
+=======
+    print(round(t, 2), ",", round(h, 1))
+    for _ in range(6):
+        leer_orden()
+        sleep_ms(500)
+>>>>>>> origin/v2

@@ -12,6 +12,10 @@
 <body>
   <h1 class="tit">Indoor</h1>
 
+  <p class="auto">Auto: <strong id="auto-estado">{{ est_auto }}</strong></p>
+  <form method="post" action="/auto/on">{{ reward_button(text="Auto ON", type="submit") }}</form>
+  <form method="post" action="/auto/off">{{ reward_button(text="Auto OFF", type="submit") }}</form>
+
   <div class="half1">
     <section>
       <div class="info box">
@@ -63,6 +67,7 @@
     </section>
 
     <section class="onoff relebox">
+      <p>Umbrales: K2 ≥ {{ umbral_k2 }}% · K3 ≥ {{ umbral_k3 }}% · K4 ≥ {{ umbral_k4 }}°C</p>
       <div class="rele">
         <p>Relé: canal 1 — <strong id="est-rele1">{{ est_rele }}</strong></p>
         <input class="switch-input" id="sw-rele1" type="checkbox" data-on="/rele/on" data-off="/rele/off" {% if est_rele == "ON" %}checked{% endif %}>

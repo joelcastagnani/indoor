@@ -4,6 +4,7 @@ from datetime import datetime
 from pathlib import Path
 import time
 import threading
+import config
 
 from flask import Flask, redirect, url_for, send_from_directory, render_template, jsonify
 app = Flask(__name__)
@@ -16,8 +17,13 @@ BANDERA_RELE = ROOT / "datos" / "rele.txt"
 BANDERA_RELE2 = ROOT / "datos" / "rele2.txt"
 BANDERA_RELE3 = ROOT / "datos" / "rele3.txt"
 BANDERA_RELE4 = ROOT / "datos" / "rele4.txt"
+BANDERA_AUTO = ROOT / "datos" / "auto.txt"
 sen = None
 
+def auto_activa():
+    if not BANDERA_AUTO.exists():
+        return True
+    return BANDERA_AUTO.read_text().strip().lower() != "off"
 
 def vivo(p):
     return p is not None and p.poll() is None
@@ -79,6 +85,7 @@ def index():
     preview_v = int(preview.stat().st_mtime) if preview.exists() else None
     return render_template(
         "index.html",
+        est_auto="ON" if auto_activa() else "OFF",
         est_sen=est_sen,
         est_vid=est_vid,
         est_rele=est_rele,
@@ -88,6 +95,9 @@ def index():
         ahora=ahora,
         clima=clima,
         preview_v=preview_v,
+        umbral_k2=config.HUMEDAD_K2,
+        umbral_k3=config.HUMEDAD_K3,
+        umbral_k4=config.TEMP_K4,
     )
 
 
@@ -109,6 +119,7 @@ def estado():
     rele2="ON" if rele2_prendido() else "OFF",
     rele3="ON" if rele3_prendido() else "OFF",
     rele4="ON" if rele4_prendido() else "OFF",
+    auto="ON" if auto_activa() else "OFF",
 )
 
 
@@ -135,6 +146,15 @@ def sen_on():
         )
     return redirect(url_for("index"))
 
+@app.post("/auto/on")
+def auto_on():
+    BANDERA_AUTO.write_text("on\n")
+    return redirect(url_for("index"))
+
+@app.post("/auto/off")
+def auto_off():
+    BANDERA_AUTO.write_text("off\n")
+    return redirect(url_for("index"))
 
 @app.post("/sen/off")
 def sen_off():
@@ -149,32 +169,60 @@ def aplicar_reles():
     b = 1 if rele2_prendido() else 0
     c = 1 if rele3_prendido() else 0
     d = 1 if rele4_prendido() else 0
+<<<<<<< HEAD
     with open("/tmp/rele_cmd", "w") as f:
         f.write(f"R 1 {a}\nR 2 {b}\nR 3 {c}\nR 4 {d}\n")
+=======
+    Path("/tmp/rele_cmd").write_text(f"R {a} {b} {c} {d}\n")
+>>>>>>> origin/v2
 
 def auto_humedad():
-    if not LOG.exists():
+    if not auto_activa():
         return
-    ultima = LOG.read_text().strip().splitlines()[-1]
+    clima = parse_clima()
+    if not clima:
+        return
     try:
-        partes = ultima.split(",")
-        temp = float(partes[1].strip())
-        humedad = float(partes[2].strip())
-    except Exception:
+        h = float(clima["hum"])
+        t = float(clima["temp"])
+    except:
         return
-    # K1 no se toca (siempre manual)
-    k2 = "on" if humedad >= 65 else "off"
-    k3 = "on" if humedad >= 75 else "off"
-    k4 = "on" if temp >= 24 else "off"
-    actual2 = BANDERA_RELE2.read_text().strip() if BANDERA_RELE2.exists() else "off"
-    actual3 = BANDERA_RELE3.read_text().strip() if BANDERA_RELE3.exists() else "off"
-    actual4 = BANDERA_RELE4.read_text().strip() if BANDERA_RELE4.exists() else "off"
-    if (actual2, actual3, actual4) == (k2, k3, k4):
-        return
-    BANDERA_RELE2.write_text(k2 + "\n")
-    BANDERA_RELE3.write_text(k3 + "\n")
-    BANDERA_RELE4.write_text(k4 + "\n")
-    aplicar_reles()
+
+    cambio = False
+
+    # K2
+        # K2
+    if h >= config.HUMEDAD_K2 and not rele2_prendido():
+        BANDERA_RELE2.write_text("on\n")
+        print(f"AUTO K2 ON  hum={h:.1f} >= {config.HUMEDAD_K2}")
+        cambio = True
+    elif h < config.HUMEDAD_K2 and rele2_prendido():
+        BANDERA_RELE2.write_text("off\n")
+        print(f"AUTO K2 OFF hum={h:.1f} < {config.HUMEDAD_K2}")
+        cambio = True
+
+    # K3
+    if h >= config.HUMEDAD_K3 and not rele3_prendido():
+        BANDERA_RELE3.write_text("on\n")
+        print(f"AUTO K3 ON  hum={h:.1f} >= {config.HUMEDAD_K3}")    
+        cambio = True
+    elif h < config.HUMEDAD_K3 and rele3_prendido():
+        BANDERA_RELE3.write_text("off\n")
+        print(f"AUTO K3 OFF hum={h:.1f} < {config.HUMEDAD_K3}")
+        cambio = True
+
+    # K4
+    if t >= config.TEMP_K4 and not rele4_prendido():
+        BANDERA_RELE4.write_text("on\n")
+        print(f"AUTO K4 ON  temp={t:.1f} >= {config.TEMP_K4}")
+        cambio = True
+    elif t < config.TEMP_K4 and rele4_prendido():
+        BANDERA_RELE4.write_text("off\n")
+        print(f"AUTO K4 OFF temp={t:.1f} < {config.TEMP_K4}")
+        cambio = True
+
+    if cambio:
+        aplicar_reles()
 
 @app.post("/rele/1/on")
 def rele1_on():
@@ -224,24 +272,16 @@ def rele4_off():
         f.write("R 4 0\n")
     return redirect(url_for("index"))
 
-def loop_auto():
-    while True:
-        time.sleep(10)
-        try:
-            auto_humedad()
-        except Exception:
-            pass
-threading.Thread(target=loop_auto, daemon=True).start()
 
 if __name__ == "__main__":
     app.config["TEMPLATES_AUTO_RELOAD"] = True
     app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0
     def loop_auto():
         while True:
-            time.sleep(10)
             try:
                 auto_humedad()
-            except Exception:
-                pass
+            except Exception as e:
+                print(f"ERROR en auto_humedad: {e}")
+            time.sleep(10)
     threading.Thread(target=loop_auto, daemon=True).start()
     app.run(host="0.0.0.0", port=5000, debug=False)

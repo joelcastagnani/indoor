@@ -4,6 +4,7 @@ import termios
 import time
 import serial
 import glob
+<<<<<<< HEAD
 
 def buscar_esp32():
     for p in sorted(glob.glob("/dev/ttyUSB*")):
@@ -20,6 +21,23 @@ if puerto is None:
     print("no encuentro el ESP32")
     raise SystemExit
 
+=======
+
+def buscar_esp32():
+    for p in sorted(glob.glob("/dev/ttyUSB*")):
+        try:
+            ser = serial.Serial(p, 115200, timeout=0.5)
+            ser.close()
+            return p
+        except (serial.SerialException, OSError):
+            continue
+    return None
+
+puerto = buscar_esp32()
+if puerto is None:
+    print("no encuentro el ESP32")
+    raise SystemExit
+>>>>>>> origin/v2
 salida = Path("datos/logs/sensor.csv")
 pausa = Path("datos/puerto.pedir")
 rele1 = Path("datos/rele.txt")
