@@ -52,3 +52,17 @@ document.querySelectorAll(".switch-input").forEach(function (sw) {
         }
     });
 });
+
+document.getElementById("fs").onclick = function () {
+    var foto = document.getElementById("preview");
+    var target = foto || document.documentElement;
+    var rfs = target.requestFullscreen || target.webkitRequestFullscreen || target.mozRequestFullScreen || target.msRequestFullscreen;
+    if (rfs) {
+        rfs.call(target).catch(function (err) {
+            console.log("Fullscreen error:", err);
+            alert("No se pudo: " + err.message);
+        });
+    } else {
+        alert("Fullscreen no soportado");
+    }
+};

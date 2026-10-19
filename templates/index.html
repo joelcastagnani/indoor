@@ -10,8 +10,6 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
-<script src="{{ url_for('static', filename='app.js') }}"></script>
-
 <body>
   <h1 class="tit">Indoor</h1>
 
@@ -31,21 +29,6 @@
     </section>
 
     <button type="button" id="fs">Pantalla completa</button>
-    <script>
-      document.getElementById("fs").onclick = function () {
-        var foto = document.getElementById("preview");
-        var target = foto || document.documentElement;
-        var rfs = target.requestFullscreen || target.webkitRequestFullscreen || target.mozRequestFullScreen || target.msRequestFullscreen;
-        if (rfs) {
-          rfs.call(target).catch(function (err) {
-            console.log("Fullscreen error:", err);
-            alert("No se pudo: " + err.message);
-          });
-        } else {
-          alert("Fullscreen no soportado");
-        }
-      };
-    </script>
 
     <section class="box">
       {% if preview_v %}
@@ -152,7 +135,7 @@
   </div>
 </body>
 
-
+<script src="{{ url_for('static', filename='app.js') }}"></script>
 
 
 </html>
