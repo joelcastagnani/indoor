@@ -1,3 +1,5 @@
+datos/auto.txt
+datos/rele*.txt
 .venv/
 __pycache__/
 *.pyc
