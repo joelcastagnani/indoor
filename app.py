@@ -231,56 +231,61 @@ def auto_humedad():
 
 
 
-
 @app.post("/rele1/on")
 def rele1_on():
+    BANDERA_RELE.write_text("on\n")
     with open("/tmp/rele_cmd", "w") as f:
         f.write("R 1 1\n")
     return redirect(url_for("index"))
 
 @app.post("/rele1/off")
 def rele1_off():
+    BANDERA_RELE.write_text("off\n")
     with open("/tmp/rele_cmd", "w") as f:
         f.write("R 1 0\n")
     return redirect(url_for("index"))
 
 @app.post("/rele2/on")
 def rele2_on():
+    BANDERA_RELE2.write_text("on\n")
     with open("/tmp/rele_cmd", "w") as f:
         f.write("R 2 1\n")
     return redirect(url_for("index"))
 
 @app.post("/rele2/off")
 def rele2_off():
+    BANDERA_RELE2.write_text("off\n")
     with open("/tmp/rele_cmd", "w") as f:
         f.write("R 2 0\n")
     return redirect(url_for("index"))
 
 @app.post("/rele3/on")
 def rele3_on():
+    BANDERA_RELE3.write_text("on\n")
     with open("/tmp/rele_cmd", "w") as f:
         f.write("R 3 1\n")
     return redirect(url_for("index"))
 
 @app.post("/rele3/off")
 def rele3_off():
+    BANDERA_RELE3.write_text("off\n")
     with open("/tmp/rele_cmd", "w") as f:
         f.write("R 3 0\n")
     return redirect(url_for("index"))
 
 @app.post("/rele4/on")
 def rele4_on():
+    BANDERA_RELE4.write_text("on\n")
     with open("/tmp/rele_cmd", "w") as f:
         f.write("R 4 1\n")
     return redirect(url_for("index"))
 
 @app.post("/rele4/off")
 def rele4_off():
+    BANDERA_RELE4.write_text("off\n")
     with open("/tmp/rele_cmd", "w") as f:
         f.write("R 4 0\n")
     return redirect(url_for("index"))
-
-
 
 
 
