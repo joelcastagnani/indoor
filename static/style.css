@@ -39,7 +39,8 @@ button {
 
 img {
   width: 80%;
-  border: 3px solid #D8D2C6;
+  /* border: 3px solid #D8D2C6; */
+  border: 3px solid green;
 }
 
 .img {

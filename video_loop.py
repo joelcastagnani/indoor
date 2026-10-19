@@ -4,7 +4,7 @@ from pathlib import Path
 from time import sleep
 
 preview = Path("datos/fotos/preview.jpg")
-carpeta = Path("datos/video")
+carpeta = Path.home() / "videos_desktop"
 bandera = Path("datos/grabar.txt")
 
 def camara_c920():
