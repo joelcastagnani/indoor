@@ -135,6 +135,10 @@ def vid_off():
     return redirect(url_for("index"))
 
 
+
+
+
+
 @app.post("/sen/on")
 def sen_on():
     global sen
@@ -164,17 +168,18 @@ def sen_off():
     return redirect(url_for("index"))
 
 
+
+
+
+
+
 def aplicar_reles():
     a = 1 if rele_prendido() else 0
     b = 1 if rele2_prendido() else 0
     c = 1 if rele3_prendido() else 0
     d = 1 if rele4_prendido() else 0
-<<<<<<< HEAD
     with open("/tmp/rele_cmd", "w") as f:
         f.write(f"R 1 {a}\nR 2 {b}\nR 3 {c}\nR 4 {d}\n")
-=======
-    Path("/tmp/rele_cmd").write_text(f"R {a} {b} {c} {d}\n")
->>>>>>> origin/v2
 
 def auto_humedad():
     if not auto_activa():
@@ -224,53 +229,59 @@ def auto_humedad():
     if cambio:
         aplicar_reles()
 
-@app.post("/rele/1/on")
+
+
+
+@app.post("/rele1/on")
 def rele1_on():
     with open("/tmp/rele_cmd", "w") as f:
         f.write("R 1 1\n")
     return redirect(url_for("index"))
 
-@app.post("/rele/1/off")
+@app.post("/rele1/off")
 def rele1_off():
     with open("/tmp/rele_cmd", "w") as f:
         f.write("R 1 0\n")
     return redirect(url_for("index"))
 
-@app.post("/rele/2/on")
+@app.post("/rele2/on")
 def rele2_on():
     with open("/tmp/rele_cmd", "w") as f:
         f.write("R 2 1\n")
     return redirect(url_for("index"))
 
-@app.post("/rele/2/off")
+@app.post("/rele2/off")
 def rele2_off():
     with open("/tmp/rele_cmd", "w") as f:
         f.write("R 2 0\n")
     return redirect(url_for("index"))
 
-@app.post("/rele/3/on")
+@app.post("/rele3/on")
 def rele3_on():
     with open("/tmp/rele_cmd", "w") as f:
         f.write("R 3 1\n")
     return redirect(url_for("index"))
 
-@app.post("/rele/3/off")
+@app.post("/rele3/off")
 def rele3_off():
     with open("/tmp/rele_cmd", "w") as f:
         f.write("R 3 0\n")
     return redirect(url_for("index"))
 
-@app.post("/rele/4/on")
+@app.post("/rele4/on")
 def rele4_on():
     with open("/tmp/rele_cmd", "w") as f:
         f.write("R 4 1\n")
     return redirect(url_for("index"))
 
-@app.post("/rele/4/off")
+@app.post("/rele4/off")
 def rele4_off():
     with open("/tmp/rele_cmd", "w") as f:
         f.write("R 4 0\n")
     return redirect(url_for("index"))
+
+
+
 
 
 if __name__ == "__main__":
