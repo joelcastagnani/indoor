@@ -29,10 +29,32 @@ async function actualizarReles() {
     try {
         const r = await fetch("/estado");
         const d = await r.json();
-        document.getElementById("est-rele1").textContent = d.rele1;
-        document.getElementById("est-rele2").textContent = d.rele2;
-        document.getElementById("est-rele3").textContent = d.rele3;
-        document.getElementById("est-rele4").textContent = d.rele4;
+
+        // Actualiza textos
+        const map = {
+            "est-rele1": d.rele1,
+            "est-rele2": d.rele2,
+            "est-rele3": d.rele3,
+            "est-rele4": d.rele4,
+            "auto-estado": d.auto
+        };
+        for (const id in map) {
+            const el = document.getElementById(id);
+            if (el) el.textContent = map[id];
+        }
+
+        // Sincroniza los switches (checkbox) con el estado real
+        const switches = {
+            "sw-rele1": d.rele1,
+            "sw-rele2": d.rele2,
+            "sw-rele3": d.rele3,
+            "sw-rele4": d.rele4,
+            "sw-auto": d.auto
+        };
+        for (const id in switches) {
+            const sw = document.getElementById(id);
+            if (sw) sw.checked = (switches[id] === "ON");
+        }
     } catch (e) { }
 }
 setInterval(actualizarReles, 1000);
