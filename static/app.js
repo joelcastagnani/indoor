@@ -1,4 +1,7 @@
 
+const fsLabel = document.getElementById("fs");
+const fsCheckbox = fsLabel.querySelector("input");
+
 async function refrescar() {
     const r = await fetch("/estado");
     const d = await r.json();
@@ -75,16 +78,27 @@ document.querySelectorAll(".switch-input").forEach(function (sw) {
     });
 });
 
-document.getElementById("fs").onclick = function () {
-    var foto = document.getElementById("preview");
-    var target = foto || document.documentElement;
-    var rfs = target.requestFullscreen || target.webkitRequestFullscreen || target.mozRequestFullScreen || target.msRequestFullscreen;
-    if (rfs) {
-        rfs.call(target).catch(function (err) {
-            console.log("Fullscreen error:", err);
-            alert("No se pudo: " + err.message);
-        });
-    } else {
-        alert("Fullscreen no soportado");
-    }
-};
+
+fsCheckbox.addEventListener("change", function () {
+  const foto = document.getElementById("preview");
+  const target = foto || document.documentElement;
+  if (fsCheckbox.checked) {
+    const rfs = target.requestFullscreen || target.webkitRequestFullscreen || target.mozRequestFullScreen || target.msRequestFullscreen;
+    if (rfs) rfs.call(target);
+  } else {
+    if (document.exitFullscreen) document.exitFullscreen();
+    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+  }
+});
+
+// Cuando salís con ESC, desmarca el checkbox
+document.addEventListener("fullscreenchange", function () {
+  if (!document.fullscreenElement) {
+    fsCheckbox.checked = false;
+  }
+});
+document.addEventListener("webkitfullscreenchange", function () {
+  if (!document.webkitFullscreenElement) {
+    fsCheckbox.checked = false;
+  }
+});
