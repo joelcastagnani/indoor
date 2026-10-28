@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Temperatura con 1 decimal (ej: 24.5)
         const cardTemp = document.getElementById("card-temp");
         if (cardTemp && d.temp != null) {
-            cardTemp.textContent = parseFloat(d.temp).toFixed(1);
+            cardTemp.textContent = parseFloat(d.temp).toFixed(2);
         }
 
         // Diferencia de temperatura estética al lado de los grados
