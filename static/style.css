@@ -16,27 +16,15 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100vw;
 }
 
-section {
-  color: var(--titulos);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-}
-
-button {
-  border: 1px solid black;
-}
 
 img{
-  width: 95%;
-  border-radius: 50px;
-}
-
-.img {
-  width: 300%;
+  border-radius: 25px;
+  width: 30vw;
+  margin-right: 80px;
+  margin-left: 10%;
 }
 
 .info {
@@ -62,11 +50,19 @@ img{
   margin-left: 20px;
   margin-right: 20px;
 }
+.header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-arround;
+  align-items: center;
+  width: 99%;
+}
 
 .half1 {
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
   width: 100%;
 }
 
@@ -78,29 +74,25 @@ img{
 
 .rele {
   display: flex;
-  padding: 10px;
-  border-radius: 10px;
 }
 
 .relebox {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  padding: 0;
-  border: none;
 }
 
 .umbrales {
   color: var(--titulos);
 }
 
-.header {
+.app-section {
+  color: var(--titulos);
   display: flex;
-  flex-direction: row;
-  justify-content: space-arround;
+  flex-direction: column;
   align-items: center;
   width: 100%;
 }
+
 
 /* Switch power estilo Uiverse - vinodjangid07 */
 .switch-input {
@@ -314,15 +306,14 @@ img{
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 180px;
-  width: 280px;
+  height: 205px;
+  width: 1000px;
   border-radius: 25px;
   background: lightgrey;
   overflow: hidden;
   transition: 100ms ease;
   box-shadow: rgba(0, 0, 0, 0.15) 2px 3px 4px;
 }
-
 /* ---------- Info section ---------- */
 
 .info-section {
