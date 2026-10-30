@@ -110,17 +110,35 @@ def servir_foto(nombre):
 def estado():
     clima = parse_clima()
     preview = FOTOS / "preview.jpg"
+
+    # chequeo simple del sensor: si hay lectura y es de los últimos 30 segundos
+    sensor_ok = False
+    if clima:
+        try:
+            ts = datetime.strptime(clima.get("ts", ""), "%Y-%m-%d %H:%M:%S")
+            sensor_ok = (datetime.now() - ts).total_seconds() < 30
+        except:
+            sensor_ok = False
+
+    lineas = []
+    lineas.append(f"[{datetime.now().strftime('%H:%M:%S')}] Sensor: {'OK' if sensor_ok else 'SIN DATOS'}")
+    if clima:
+        lineas.append(f"  Temp: {clima['temp']} °C | Hum: {clima['hum']} %")
+    else:
+        lineas.append("  Sin lectura reciente")
+
     return jsonify(
-    ahora=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-    temp=clima["temp"] if clima else None,
-    hum=clima["hum"] if clima else None,
-    preview_v=int(preview.stat().st_mtime) if preview.exists() else None,
-    rele1="ON" if rele_prendido() else "OFF",
-    rele2="ON" if rele2_prendido() else "OFF",
-    rele3="ON" if rele3_prendido() else "OFF",
-    rele4="ON" if rele4_prendido() else "OFF",
-    auto="ON" if auto_activa() else "OFF",
-)
+        ahora=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        temp=clima["temp"] if clima else None,
+        hum=clima["hum"] if clima else None,
+        preview_v=int(preview.stat().st_mtime) if preview.exists() else None,
+        rele1="ON" if rele_prendido() else "OFF",
+        rele2="ON" if rele2_prendido() else "OFF",
+        rele3="ON" if rele3_prendido() else "OFF",
+        rele4="ON" if rele4_prendido() else "OFF",
+        auto="ON" if auto_activa() else "OFF",
+        log="\n".join(lineas),
+    )
 
 
 @app.post("/vid/on")

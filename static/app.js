@@ -6,14 +6,14 @@ document.addEventListener("DOMContentLoaded", () => {
     async function refrescar() {
         const r = await fetch("/estado");
         const d = await r.json();
-        
+
         // Datos generales de texto en la web
         const ahora = document.getElementById("ahora");
         if (ahora && d.ahora) ahora.textContent = d.ahora;
-        
+
         const temp = document.getElementById("temp");
         if (temp && d.temp != null) temp.textContent = d.temp + " °C";
-        
+
         const tempDif = document.getElementById("temp-dif");
         const deseada = 24;
         if (tempDif && d.temp != null) {
@@ -24,10 +24,10 @@ document.addEventListener("DOMContentLoaded", () => {
             else if (dif < -10) tempDif.style.color = "#b8860b";
             else tempDif.style.color = "#1e7f4f";
         }
-        
+
         const hum = document.getElementById("hum");
         if (hum && d.hum != null) hum.textContent = d.hum + " %";
-        
+
         const img = document.getElementById("preview");
         if (img && d.preview_v && !img.src.endsWith("v=" + d.preview_v)) {
             img.src = "/foto/preview.jpg?v=" + d.preview_v;
@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // ==========================================
         // ACTUALIZACIÓN DE LA TARJETA VISUAL (PC)
         // ==========================================
-        
+
         // Temperatura con 1 decimal (ej: 24.5)
         const cardTemp = document.getElementById("card-temp");
         if (cardTemp && d.temp != null) {
@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const dif = d.temp - deseada;
             const signo = dif > 0 ? "+" : "";
             cardTempDif.textContent = "(" + signo + dif.toFixed(1) + "°)";
-            
+
             if (dif > 5) cardTempDif.style.color = "#ffeb3b"; // Amarillo alerta calor
             else if (dif < -5) cardTempDif.style.color = "#90caf9"; // Azul alerta frío
             else cardTempDif.style.color = "#ffffff"; // Blanco si está OK
@@ -66,8 +66,12 @@ document.addEventListener("DOMContentLoaded", () => {
             cardHora.textContent = d.ahora.length > 8 ? d.ahora.slice(-8, -3) : d.ahora;
             cardFecha.textContent = d.ahora.length > 10 ? d.ahora.slice(0, 10) : d.ahora;
         }
+
+        const logEl = document.getElementById("log");
+        if (logEl && d.log) logEl.textContent = d.log;
     }
     setInterval(refrescar, 3000);
+
 
     async function actualizarReles() {
         try {
@@ -103,6 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     setInterval(actualizarReles, 1000);
 
+
     document.querySelectorAll(".switch-input").forEach(function (sw) {
         sw.addEventListener("change", async function () {
             const url = sw.checked ? sw.dataset.on : sw.dataset.off;
@@ -118,6 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     });
+
 
     if (fsCheckbox) {
         fsCheckbox.addEventListener("change", function () {
@@ -144,5 +150,5 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
-    
+
 });
