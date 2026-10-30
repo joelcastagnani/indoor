@@ -33,40 +33,6 @@ document.addEventListener("DOMContentLoaded", () => {
             img.src = "/foto/preview.jpg?v=" + d.preview_v;
         }
 
-        // ==========================================
-        // ACTUALIZACIÓN DE LA TARJETA VISUAL (PC)
-        // ==========================================
-
-        // Temperatura con 1 decimal (ej: 24.5)
-        const cardTemp = document.getElementById("card-temp");
-        if (cardTemp && d.temp != null) {
-            cardTemp.textContent = parseFloat(d.temp).toFixed(2);
-        }
-
-        // Diferencia de temperatura estética al lado de los grados
-        const cardTempDif = document.getElementById("card-temp-dif");
-        if (cardTempDif && d.temp != null) {
-            const dif = d.temp - deseada;
-            const signo = dif > 0 ? "+" : "";
-            cardTempDif.textContent = "(" + signo + dif.toFixed(1) + "°)";
-
-            if (dif > 5) cardTempDif.style.color = "#ffeb3b"; // Amarillo alerta calor
-            else if (dif < -5) cardTempDif.style.color = "#90caf9"; // Azul alerta frío
-            else cardTempDif.style.color = "#ffffff"; // Blanco si está OK
-        }
-
-        // Humedad en la tarjeta
-        const cardHum = document.getElementById("card-hum");
-        if (cardHum && d.hum != null) cardHum.textContent = "Hum: " + d.hum + "%";
-
-        // Hora y Fecha en la tarjeta
-        const cardHora = document.getElementById("card-hora");
-        const cardFecha = document.getElementById("card-fecha");
-        if (d.ahora) {
-            cardHora.textContent = d.ahora.length > 8 ? d.ahora.slice(-8, -3) : d.ahora;
-            cardFecha.textContent = d.ahora.length > 10 ? d.ahora.slice(0, 10) : d.ahora;
-        }
-
         const logEl = document.getElementById("log");
         if (logEl && d.log) logEl.textContent = d.log;
     }

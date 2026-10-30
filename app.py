@@ -5,9 +5,11 @@ from pathlib import Path
 import time
 import threading
 import config
+import requests
 
 from flask import Flask, redirect, url_for, send_from_directory, render_template, jsonify
 app = Flask(__name__)
+ultimo_sensor_ok = True
 
 ROOT = Path(__file__).resolve().parent
 FOTOS = ROOT / "datos" / "fotos"
@@ -65,10 +67,26 @@ def parse_clima():
     lineas = LOG.read_text().strip().splitlines()
     if not lineas:
         return None
-    partes = [p.strip() for p in lineas[-1].split(",")]
+    ultima = lineas[-1].strip()
+    partes = [p.strip() for p in ultima.split(",")]
     if len(partes) < 3:
         return None
-    return {"temp": partes[1], "hum": partes[2]}
+    return {
+        "ts": partes[0],
+        "temp": partes[1],
+        "hum": partes[2],
+    }
+
+def avisar(msg):
+    try:
+        requests.post(
+            "https://ntfy.sh/indoor",
+            data=msg.encode("utf-8"),
+            headers={"Title": "Indoor"},
+            timeout=5,
+        )
+    except:
+        pass
 
 
 @app.get("/")
@@ -120,6 +138,11 @@ def estado():
         except:
             sensor_ok = False
 
+        global ultimo_sensor_ok
+    if not sensor_ok and ultimo_sensor_ok:
+        avisar("Sensor SIN DATOS")
+    ultimo_sensor_ok = sensor_ok
+    
     lineas = []
     lineas.append(f"[{datetime.now().strftime('%H:%M:%S')}] Sensor: {'OK' if sensor_ok else 'SIN DATOS'}")
     if clima:
@@ -151,8 +174,6 @@ def vid_on():
 def vid_off():
     BANDERA.write_text("off\n")
     return redirect(url_for("index"))
-
-
 
 
 

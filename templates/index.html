@@ -44,43 +44,7 @@
       {% endif %}
     </section>
 
-    <!-- From Uiverse.io by KSAplay -->
-    <div class="card">
-      <section class="info-section">
-        <div class="background-design">
-          <div class="circle"></div>
-          <div class="circle"></div>
-          <div class="circle"></div>
-        </div>
-
-        <div class="left-side">
-          <div class="weather">
-            <!-- Eliminamos el div del SVG del sol que estaba aquí -->
-            <div style="font-weight: 600; font-size: 14px; opacity: 0.9;">Indoor v2</div>
-          </div>
-
-          <!-- Temperatura con 1 decimal y la diferencia al lado -->
-          <div style="display: flex; align-items: baseline; gap: 4px;">
-            <div class="temperature"><span id="card-temp">--,--</span>°</div>
-            <span id="card-temp-dif" style="font-size: 11pt; font-weight: 500;"></span>
-          </div>
-        </div>
-
-        <div class="right-side">
-          <div>
-            <div class="hour" id="card-hora">--:--</div>
-            <div class="date" id="card-hum">Hum: --%</div>
-          </div>
-          <div class="city" id="card-fecha" style="font-size: 12px; opacity: 0.9;">--/--/----</div>
-        </div>
-      </section>
-      <section class="days-section">
-        <button style="width: 100%;">
-          <span class="day" style="font-size: 11pt;">EDITAR UMBRALES</span>
-        </button>
-      </section>
-    </div>
-    <!-- From Uiverse.io by KSAplay -->
+    <pre id="log" style="background:#111;color:#0f0;padding:0.8rem;font-family:monospace;font-size:0.85rem;white-space:pre-wrap;max-height:12rem;overflow:auto;"></pre>
 
     <section class=" relebox app-section">
       <div class="rele">
@@ -170,8 +134,6 @@
       </label>
     </section>
   </div>
-
-  <pre id="log" style="background:#111;color:#0f0;padding:0.8rem;font-family:monospace;font-size:0.85rem;white-space:pre-wrap;max-height:12rem;overflow:auto;"></pre>
 
   <script src="{{ url_for('static', filename='app.js') }}" defer></script>
 </body>
