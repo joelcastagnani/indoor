@@ -217,8 +217,18 @@ def aplicar_reles():
     b = 1 if rele2_prendido() else 0
     c = 1 if rele3_prendido() else 0
     d = 1 if rele4_prendido() else 0
-    with open("/tmp/rele_cmd", "w") as f:
-        f.write(f"R 1 {a}\nR 2 {b}\nR 3 {c}\nR 4 {d}\n")
+    try:
+        import urllib.request
+        if a: urllib.request.urlopen("http://192.168.1.132/r1/on", timeout=3)
+        else: urllib.request.urlopen("http://192.168.1.132/r1/off", timeout=3)
+        if b: urllib.request.urlopen("http://192.168.1.132/r2/on", timeout=3)
+        else: urllib.request.urlopen("http://192.168.1.132/r2/off", timeout=3)
+        if c: urllib.request.urlopen("http://192.168.1.132/r3/on", timeout=3)
+        else: urllib.request.urlopen("http://192.168.1.132/r3/off", timeout=3)
+        if d: urllib.request.urlopen("http://192.168.1.132/r4/on", timeout=3)
+        else: urllib.request.urlopen("http://192.168.1.132/r4/off", timeout=3)
+    except Exception as e:
+        print("error wifi rele:", e)
 
 def auto_humedad():
     if not auto_activa():
